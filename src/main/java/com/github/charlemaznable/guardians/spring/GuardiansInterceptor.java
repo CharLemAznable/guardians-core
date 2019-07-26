@@ -52,8 +52,8 @@ public class GuardiansInterceptor implements HandlerInterceptor {
         val handlerMethod = (HandlerMethod) handler;
 
         val cacheKey = new HandlerGuardiansCacheKey(handlerMethod);
-        List<PreGuardian> preGuardians = preGuardiansAnnotationCache.get(
-                cacheKey, () -> findGuardians(cacheKey, PreGuardian.class,
+        val preGuardians = preGuardiansAnnotationCache.get(cacheKey,
+                () -> findGuardians(cacheKey, PreGuardian.class,
                         PreGuardians.class, PreGuardians::value));
         if (preGuardians.size() == 0) return true;
 
@@ -91,8 +91,8 @@ public class GuardiansInterceptor implements HandlerInterceptor {
         val handlerMethod = (HandlerMethod) handler;
 
         val cacheKey = new HandlerGuardiansCacheKey(handlerMethod);
-        List<PostGuardian> postGuardians = postGuardiansAnnotationCache.get(
-                cacheKey, () -> findGuardians(cacheKey, PostGuardian.class,
+        val postGuardians = postGuardiansAnnotationCache.get(cacheKey,
+                () -> findGuardians(cacheKey, PostGuardian.class,
                         PostGuardians.class, PostGuardians::value));
         if (postGuardians.size() == 0) return;
 
@@ -152,12 +152,10 @@ public class GuardiansInterceptor implements HandlerInterceptor {
             } else if (isAssignable(parameterType, HttpServletResponse.class)) {
                 parameters[i] = response;
             } else if (isAssignable(parameterType, Annotation.class)) {
-                Class<Annotation> annotationType = (Class<Annotation>) parameterType;
-                val methodAnnotation = findAnnotation(cacheKey.getMethod(), annotationType);
-                if (null != methodAnnotation) { parameters[i] = methodAnnotation; continue; }
-                val classAnnotation = findAnnotation(cacheKey.getDeclaringClass(), annotationType);
-                if (null != classAnnotation) { parameters[i] = classAnnotation; continue; }
-                parameters[i] = null;
+                val annotationType = (Class<Annotation>) parameterType;
+                parameters[i] = findAnnotation(cacheKey.getMethod(), annotationType);
+                if (null != parameters[i]) continue;
+                parameters[i] = findAnnotation(cacheKey.getDeclaringClass(), annotationType);
             } else {
                 parameters[i] = null;
                 for (val contextType : contextTypes) {
