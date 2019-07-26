@@ -44,8 +44,8 @@ public class MultipleTest {
 
     @SneakyThrows
     @Test
-    public void testPlain() {
-        val response = mockMvc.perform(get("/multiple/plain"))
+    public void testDefault() {
+        val response = mockMvc.perform(get("/multiple/default"))
                 .andExpect(status().isOk())
                 .andReturn().getResponse();
         String responseContent = response.getContentAsString();
@@ -58,6 +58,18 @@ public class MultipleTest {
     @Test
     public void testCompose() {
         val response = mockMvc.perform(get("/multiple/compose"))
+                .andExpect(status().isOk())
+                .andReturn().getResponse();
+        String responseContent = response.getContentAsString();
+        Map<String, Object> responseMap = unJson(responseContent);
+        assertEquals("MultipleAlphaGuardianMultipleBetaGuardian", responseMap.get("prefix"));
+        assertEquals("MultipleBetaGuardianMultipleAlphaGuardian", responseMap.get("suffix"));
+    }
+
+    @SneakyThrows
+    @Test
+    public void testPlain() {
+        val response = mockMvc.perform(get("/multiple/plain"))
                 .andExpect(status().isOk())
                 .andReturn().getResponse();
         String responseContent = response.getContentAsString();
