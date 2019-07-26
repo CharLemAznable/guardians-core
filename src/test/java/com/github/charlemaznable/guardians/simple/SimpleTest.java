@@ -73,8 +73,8 @@ public class SimpleTest {
                 .andReturn().getResponse();
         String responseContent = response.getContentAsString();
         Map<String, Object> responseMap = unJson(responseContent);
-        assertEquals("SimpleRequestGuardian", responseMap.get("prefix"));
-        assertEquals("SimpleResponseGuardian", responseMap.get("suffix"));
+        assertEquals("SimpleGuardian", responseMap.get("prefix"));
+        assertEquals("SimpleGuardian", responseMap.get("suffix"));
     }
 
     @SneakyThrows

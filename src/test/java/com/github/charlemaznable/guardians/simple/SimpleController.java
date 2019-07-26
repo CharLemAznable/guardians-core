@@ -27,15 +27,15 @@ public class SimpleController {
         Http.responseJson(response, json(Http.fetchParameterMap(request)));
     }
 
-    @PreGuardian(SimpleRequestGuardian.class)
-    @PostGuardian(SimpleResponseGuardian.class)
+    @PreGuardian(SimpleGuardian.class)
+    @PostGuardian(SimpleGuardian.class)
     @RequestMapping("/guarding")
     public void guarding(HttpServletRequest request, HttpServletResponse response) {
         Http.responseJson(response, json(Http.fetchParameterMap(request)));
     }
 
-    @PreGuardian(ErrorRequestGuardian.class)
-    @PostGuardian(ErrorResponseGuardian.class)
+    @PreGuardian(ErrorGuardian.class)
+    @PostGuardian(ErrorGuardian.class)
     @RequestMapping("/guardingError")
     public void guardingError(HttpServletRequest request, HttpServletResponse response) {
         Http.responseJson(response, json(Http.fetchParameterMap(request)));

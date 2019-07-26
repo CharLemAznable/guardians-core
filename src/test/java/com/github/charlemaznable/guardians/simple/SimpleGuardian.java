@@ -1,6 +1,7 @@
 package com.github.charlemaznable.guardians.simple;
 
 import com.github.charlemaznable.guardians.Guard;
+import com.github.charlemaznable.spring.MutableHttpServletRequest;
 import com.github.charlemaznable.spring.MutableHttpServletResponse;
 import com.github.charlemaznable.spring.MutableHttpServletUtils;
 import lombok.val;
@@ -11,14 +12,20 @@ import static com.github.charlemaznable.codec.Json.unJson;
 import static com.github.charlemaznable.lang.Mapp.newHashMap;
 
 @Component
-public class SimpleResponseGuardian {
+public class SimpleGuardian {
+
+    @Guard
+    public boolean guard(MutableHttpServletRequest request) {
+        request.setParameter("prefix", "SimpleGuardian");
+        return true;
+    }
 
     @Guard
     public void guard(MutableHttpServletResponse response) {
         MutableHttpServletUtils.mutateResponse(response, mutableResponse -> {
             val contentAsString = mutableResponse.getContentAsString();
             val contentMap = newHashMap(unJson(contentAsString));
-            contentMap.put("suffix", "SimpleResponseGuardian");
+            contentMap.put("suffix", "SimpleGuardian");
             mutableResponse.setContentByString(json(contentMap));
         });
     }
