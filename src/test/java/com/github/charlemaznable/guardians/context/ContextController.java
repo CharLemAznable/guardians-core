@@ -15,22 +15,22 @@ import static com.github.charlemaznable.codec.Json.json;
 @RequestMapping("/context")
 public class ContextController {
 
-    @PreGuardian(type = ContextRequestGuardian.class, context = GuardContextAlpha.class)
-    @PostGuardian(type = ContextResponseGuardian.class, context = GuardContextAlpha.class)
+    @PreGuardian(type = ContextGuardian.class, context = GuardContextAlpha.class)
+    @PostGuardian(type = ContextGuardian.class, context = GuardContextAlpha.class)
     @RequestMapping("/alpha")
     public void alpha(HttpServletRequest request, HttpServletResponse response) {
         Http.responseJson(response, json(Http.fetchParameterMap(request)));
     }
 
-    @PreGuardian(type = ContextRequestGuardian.class, context = GuardContextBeta.class)
-    @PostGuardian(type = ContextResponseGuardian.class, context = GuardContextBeta.class)
+    @PreGuardian(type = ContextGuardian.class, context = GuardContextBeta.class)
+    @PostGuardian(type = ContextGuardian.class, context = GuardContextBeta.class)
     @RequestMapping("/beta")
     public void beta(HttpServletRequest request, HttpServletResponse response) {
         Http.responseJson(response, json(Http.fetchParameterMap(request)));
     }
 
-    @PreGuardian(type = ContextRequestGuardian.class, context = GuardContextError.class)
-    @PostGuardian(type = ContextResponseGuardian.class, context = GuardContextError.class)
+    @PreGuardian(type = ContextGuardian.class, context = GuardContextError.class)
+    @PostGuardian(type = ContextGuardian.class, context = GuardContextError.class)
     @RequestMapping("/error")
     public void error(HttpServletRequest request, HttpServletResponse response) {
         Http.responseJson(response, json(Http.fetchParameterMap(request)));

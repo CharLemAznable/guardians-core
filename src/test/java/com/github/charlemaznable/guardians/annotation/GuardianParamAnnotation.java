@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
 @Documented
 @Target({ElementType.TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface GuardAnno {
+public @interface GuardianParamAnnotation {
 
-    String value();
+    String value() default "DEFAULT";
 }

@@ -1,4 +1,4 @@
-package com.github.charlemaznable.guardians.annotation;
+package com.github.charlemaznable.guardians.context;
 
 import com.github.charlemaznable.guardians.Guard;
 import com.github.charlemaznable.spring.MutableHttpServletRequest;
@@ -13,22 +13,22 @@ import static com.github.charlemaznable.lang.Condition.checkNull;
 import static com.github.charlemaznable.lang.Mapp.newHashMap;
 
 @Component
-public class AnnotationGuardian {
+public class ContextGuardian {
 
     @Guard
-    public boolean guard(MutableHttpServletRequest request, GuardianParamAnnotation anno) {
-        request.setParameter("prefix", checkNull(anno,
-                () -> "Empty", GuardianParamAnnotation::value));
+    public boolean guard(MutableHttpServletRequest request, GuardContext context) {
+        request.setParameter("prefix", checkNull(context,
+                () -> "Error", GuardContext::contextValue));
         return true;
     }
 
     @Guard
-    public void guard(MutableHttpServletResponse response, GuardianParamAnnotation anno) {
+    public void guard(MutableHttpServletResponse response, GuardContext context) {
         MutableHttpServletUtils.mutateResponse(response, mutableResponse -> {
             val contentAsString = mutableResponse.getContentAsString();
             val contentMap = newHashMap(unJson(contentAsString));
-            contentMap.put("suffix", checkNull(anno,
-                    () -> "Empty", GuardianParamAnnotation::value));
+            contentMap.put("suffix", checkNull(context,
+                    () -> "Error", GuardContext::contextValue));
             mutableResponse.setContentByString(json(contentMap));
         });
     }

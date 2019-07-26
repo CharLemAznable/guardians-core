@@ -11,8 +11,7 @@ import static com.github.charlemaznable.codec.Json.json;
 
 @Controller
 @RequestMapping("/annotation")
-@AnnotationGuardian
-@GuardAnno("DEFAULT")
+@GuardianAnnotation
 public class AnnotationController {
 
     @RequestMapping("/default")
@@ -20,15 +19,27 @@ public class AnnotationController {
         Http.responseJson(response, json(Http.fetchParameterMap(request)));
     }
 
-    @GuardAnno("ALPHA")
+    @GuardianParamAnnotation("ALPHA")
     @RequestMapping("/alpha")
     public void alpha(HttpServletRequest request, HttpServletResponse response) {
         Http.responseJson(response, json(Http.fetchParameterMap(request)));
     }
 
-    @GuardAnno("BETA")
+    @GuardianParamAnnotation("BETA")
     @RequestMapping("/beta")
     public void beta(HttpServletRequest request, HttpServletResponse response) {
+        Http.responseJson(response, json(Http.fetchParameterMap(request)));
+    }
+
+    @GuardianAnnotation("GAMMA")
+    @RequestMapping("/gamma")
+    public void gamma(HttpServletRequest request, HttpServletResponse response) {
+        Http.responseJson(response, json(Http.fetchParameterMap(request)));
+    }
+
+    @GuardianAnnotation("DELTA")
+    @RequestMapping("/delta")
+    public void delta(HttpServletRequest request, HttpServletResponse response) {
         Http.responseJson(response, json(Http.fetchParameterMap(request)));
     }
 }

@@ -80,6 +80,30 @@ public class AnnotationTest {
 
     @SneakyThrows
     @Test
+    public void testGamma() {
+        val response = mockMvc.perform(get("/annotation/gamma"))
+                .andExpect(status().isOk())
+                .andReturn().getResponse();
+        String responseContent = response.getContentAsString();
+        Map<String, Object> responseMap = unJson(responseContent);
+        assertEquals("GAMMA", responseMap.get("prefix"));
+        assertEquals("GAMMA", responseMap.get("suffix"));
+    }
+
+    @SneakyThrows
+    @Test
+    public void testDelta() {
+        val response = mockMvc.perform(get("/annotation/delta"))
+                .andExpect(status().isOk())
+                .andReturn().getResponse();
+        String responseContent = response.getContentAsString();
+        Map<String, Object> responseMap = unJson(responseContent);
+        assertEquals("DELTA", responseMap.get("prefix"));
+        assertEquals("DELTA", responseMap.get("suffix"));
+    }
+
+    @SneakyThrows
+    @Test
     public void testError() {
         val response = mockMvc.perform(get("/annotation/error"))
                 .andExpect(status().isOk())
