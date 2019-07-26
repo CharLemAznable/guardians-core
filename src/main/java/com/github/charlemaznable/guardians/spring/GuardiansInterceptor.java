@@ -31,7 +31,7 @@ import static com.github.charlemaznable.spring.MutableHttpServletUtils.mutableRe
 import static com.github.charlemaznable.spring.MutableHttpServletUtils.mutableResponse;
 import static com.github.charlemaznable.spring.SpringContext.getBean;
 import static org.apache.commons.lang3.reflect.MethodUtils.getMethodsListWithAnnotation;
-import static org.springframework.core.annotation.AnnotationUtils.findAnnotation;
+import static org.springframework.core.annotation.AnnotatedElementUtils.findMergedAnnotation;
 
 @Slf4j
 @Component
@@ -123,14 +123,14 @@ public class GuardiansInterceptor implements HandlerInterceptor {
                                  Class<Guardians> guardiansType,
                                  Function<Guardians, Guardian[]> fetcher) {
 
-        val methodGuardians = findAnnotation(cacheKey.getMethod(), guardiansType);
+        val methodGuardians = findMergedAnnotation(cacheKey.getMethod(), guardiansType);
         if (null != methodGuardians) return newArrayList(fetcher.apply(methodGuardians));
-        val methodGuardian = findAnnotation(cacheKey.getMethod(), guardianType);
+        val methodGuardian = findMergedAnnotation(cacheKey.getMethod(), guardianType);
         if (null != methodGuardian) return newArrayList(methodGuardian);
 
-        val classGuardians = findAnnotation(cacheKey.getDeclaringClass(), guardiansType);
+        val classGuardians = findMergedAnnotation(cacheKey.getDeclaringClass(), guardiansType);
         if (null != classGuardians) return newArrayList(fetcher.apply(classGuardians));
-        val classGuardian = findAnnotation(cacheKey.getDeclaringClass(), guardianType);
+        val classGuardian = findMergedAnnotation(cacheKey.getDeclaringClass(), guardianType);
         if (null != classGuardian) return newArrayList(classGuardian);
 
         return newArrayList();
@@ -153,9 +153,9 @@ public class GuardiansInterceptor implements HandlerInterceptor {
                 parameters[i] = response;
             } else if (isAssignable(parameterType, Annotation.class)) {
                 val annotationType = (Class<Annotation>) parameterType;
-                parameters[i] = findAnnotation(cacheKey.getMethod(), annotationType);
+                parameters[i] = findMergedAnnotation(cacheKey.getMethod(), annotationType);
                 if (null != parameters[i]) continue;
-                parameters[i] = findAnnotation(cacheKey.getDeclaringClass(), annotationType);
+                parameters[i] = findMergedAnnotation(cacheKey.getDeclaringClass(), annotationType);
             } else {
                 parameters[i] = null;
                 for (val contextType : contextTypes) {
