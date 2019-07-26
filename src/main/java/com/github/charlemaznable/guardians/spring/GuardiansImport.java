@@ -11,6 +11,6 @@ import java.lang.annotation.Target;
 @Documented
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-@Import(GuardianConfiguration.class)
-public @interface GuardianImport {
+@Import(GuardiansConfiguration.class)
+public @interface GuardiansImport {
 }

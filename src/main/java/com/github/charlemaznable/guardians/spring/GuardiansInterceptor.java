@@ -35,11 +35,11 @@ import static org.springframework.core.annotation.AnnotationUtils.findAnnotation
 
 @Slf4j
 @Component
-public class GuardianInterceptor implements HandlerInterceptor {
+public class GuardiansInterceptor implements HandlerInterceptor {
 
-    private Cache<HandlerGuardianCacheKey, List<PreGuardian>>
+    private Cache<HandlerGuardiansCacheKey, List<PreGuardian>>
             preGuardiansAnnotationCache = CacheBuilder.newBuilder().build();
-    private Cache<HandlerGuardianCacheKey, List<PostGuardian>>
+    private Cache<HandlerGuardiansCacheKey, List<PostGuardian>>
             postGuardiansAnnotationCache = CacheBuilder.newBuilder().build();
 
     @SneakyThrows
@@ -51,7 +51,7 @@ public class GuardianInterceptor implements HandlerInterceptor {
         if (!(handler instanceof HandlerMethod)) return true;
         val handlerMethod = (HandlerMethod) handler;
 
-        val cacheKey = new HandlerGuardianCacheKey(handlerMethod);
+        val cacheKey = new HandlerGuardiansCacheKey(handlerMethod);
         List<PreGuardian> preGuardians = preGuardiansAnnotationCache.get(
                 cacheKey, () -> findGuardians(cacheKey, PreGuardian.class,
                         PreGuardians.class, PreGuardians::value));
@@ -74,7 +74,7 @@ public class GuardianInterceptor implements HandlerInterceptor {
                 val parameters = buildGuardParameters(guardMethod,
                         mutableRequest, mutableResponse, contextTypes, cacheKey);
                 val result = invokeQuietly(guardian, guardMethod, parameters);
-                if (!(Boolean) result) return false;
+                if (!(result instanceof Boolean) || !(Boolean) result) return false;
             }
         }
 
@@ -90,7 +90,7 @@ public class GuardianInterceptor implements HandlerInterceptor {
         if (!(handler instanceof HandlerMethod)) return;
         val handlerMethod = (HandlerMethod) handler;
 
-        val cacheKey = new HandlerGuardianCacheKey(handlerMethod);
+        val cacheKey = new HandlerGuardiansCacheKey(handlerMethod);
         List<PostGuardian> postGuardians = postGuardiansAnnotationCache.get(
                 cacheKey, () -> findGuardians(cacheKey, PostGuardian.class,
                         PostGuardians.class, PostGuardians::value));
@@ -118,7 +118,7 @@ public class GuardianInterceptor implements HandlerInterceptor {
     }
 
     private <Guardian extends Annotation, Guardians extends Annotation>
-    List<Guardian> findGuardians(HandlerGuardianCacheKey cacheKey,
+    List<Guardian> findGuardians(HandlerGuardiansCacheKey cacheKey,
                                  Class<Guardian> guardianType,
                                  Class<Guardians> guardiansType,
                                  Function<Guardians, Guardian[]> fetcher) {
@@ -141,7 +141,7 @@ public class GuardianInterceptor implements HandlerInterceptor {
                                           HttpServletRequest request,
                                           HttpServletResponse response,
                                           Class<?>[] contextTypes,
-                                          HandlerGuardianCacheKey cacheKey) {
+                                          HandlerGuardiansCacheKey cacheKey) {
 
         val parameterTypes = guardMethod.getParameterTypes();
         val parameters = new Object[parameterTypes.length];
@@ -176,12 +176,12 @@ public class GuardianInterceptor implements HandlerInterceptor {
 
     @Getter
     @EqualsAndHashCode
-    static class HandlerGuardianCacheKey {
+    static class HandlerGuardiansCacheKey {
 
         private Method method;
         private Class<?> declaringClass;
 
-        HandlerGuardianCacheKey(HandlerMethod handlerMethod) {
+        HandlerGuardiansCacheKey(HandlerMethod handlerMethod) {
             this.method = handlerMethod.getMethod();
             this.declaringClass = this.method.getDeclaringClass();
         }

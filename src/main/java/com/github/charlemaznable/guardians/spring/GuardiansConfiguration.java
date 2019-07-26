@@ -11,13 +11,13 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @ComponentScan
 @Configuration
 @ComplexImport
-public class GuardianConfiguration implements WebMvcConfigurer {
+public class GuardiansConfiguration implements WebMvcConfigurer {
 
     @Autowired
-    private GuardianInterceptor guardianInterceptor;
+    private GuardiansInterceptor guardiansInterceptor;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(guardianInterceptor).addPathPatterns("/**");
+        registry.addInterceptor(guardiansInterceptor).addPathPatterns("/**");
     }
 }
