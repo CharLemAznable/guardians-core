@@ -86,5 +86,12 @@ public class MultipleTest {
         val responseContent = response.getContentAsString();
         val responseMap = unJson(responseContent);
         assertTrue(responseMap.isEmpty());
+
+        val response2 = mockMvc.perform(get("/none/none"))
+                .andExpect(status().isOk())
+                .andReturn().getResponse();
+        val responseContent2 = response2.getContentAsString();
+        val responseMap2 = unJson(responseContent2);
+        assertTrue(responseMap.isEmpty());
     }
 }
