@@ -1,8 +1,8 @@
 package com.github.charlemaznable.guardians.utils;
 
 import com.github.charlemaznable.net.Http;
-import lombok.Data;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.SneakyThrows;
 import org.springframework.util.StringUtils;
 
@@ -19,19 +19,19 @@ import static com.google.common.base.Charsets.UTF_8;
 @Getter
 public enum RequestBodyFormatExtractor {
 
-    FORM {
+    Form {
         @Override
         public RequestBodyFormExtractor extractor() {
             return new RequestBodyFormExtractor();
         }
     },
-    JSON {
+    Json {
         @Override
         public RequestBodyJsonExtractor extractor() {
             return new RequestBodyJsonExtractor();
         }
     },
-    XML {
+    Xml {
         @Override
         public RequestBodyXmlExtractor extractor() {
             return new RequestBodyXmlExtractor();
@@ -40,7 +40,8 @@ public enum RequestBodyFormatExtractor {
 
     public abstract AbstractRequestBodyFormatExtractor extractor();
 
-    @Data
+    @Getter
+    @Setter
     static abstract class AbstractRequestBodyFormatExtractor implements Function<HttpServletRequest, Map> {
 
         private String charsetName = UTF_8.name();

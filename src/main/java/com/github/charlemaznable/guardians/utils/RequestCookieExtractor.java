@@ -1,7 +1,8 @@
 package com.github.charlemaznable.guardians.utils;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.val;
 
 import javax.servlet.http.Cookie;
@@ -10,7 +11,8 @@ import java.util.function.Function;
 
 import static com.github.charlemaznable.lang.Condition.nullThen;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 public class RequestCookieExtractor implements Function<HttpServletRequest, Cookie> {
 

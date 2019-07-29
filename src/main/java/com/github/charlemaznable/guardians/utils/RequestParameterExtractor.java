@@ -1,12 +1,14 @@
 package com.github.charlemaznable.guardians.utils;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.function.Function;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 public class RequestParameterExtractor implements Function<HttpServletRequest, String> {
 

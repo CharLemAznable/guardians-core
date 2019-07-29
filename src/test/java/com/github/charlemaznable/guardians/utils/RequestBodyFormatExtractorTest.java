@@ -17,7 +17,7 @@ public class RequestBodyFormatExtractorTest {
         val request = new MockHttpServletRequest();
         request.setContent(bytes("key1=value1&key2=%E8%A1%A8%E5%8D%95&key3=&key4"));
 
-        val formExtractor = RequestBodyFormatExtractor.FORM.extractor();
+        val formExtractor = RequestBodyFormatExtractor.Form.extractor();
         assertEquals("UTF-8", formExtractor.getCharsetName());
         Map formMap = formExtractor.apply(request);
         assertEquals("value1", formMap.get("key1"));
@@ -31,7 +31,7 @@ public class RequestBodyFormatExtractorTest {
         val request = new MockHttpServletRequest();
         request.setContent(bytes("{\"key1\":\"value1\",\"key2\":\"表单\",\"key3\":\"\"}"));
 
-        val jsonExtractor = RequestBodyFormatExtractor.JSON.extractor();
+        val jsonExtractor = RequestBodyFormatExtractor.Json.extractor();
         assertEquals("UTF-8", jsonExtractor.getCharsetName());
         Map formMap = jsonExtractor.apply(request);
         assertEquals("value1", formMap.get("key1"));
@@ -46,7 +46,7 @@ public class RequestBodyFormatExtractorTest {
         request.setContent(bytes("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
                 "<xml><key1>value1</key1><key2>表单</key2><key3></key3></xml>"));
 
-        val xmlExtractor = RequestBodyFormatExtractor.XML.extractor();
+        val xmlExtractor = RequestBodyFormatExtractor.Xml.extractor();
         assertEquals("UTF-8", xmlExtractor.getCharsetName());
         Map formMap = xmlExtractor.apply(request);
         assertEquals("value1", formMap.get("key1"));
