@@ -16,8 +16,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.util.Map;
-
 import static com.github.charlemaznable.codec.Json.unJson;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -48,8 +46,8 @@ public class ContextTest {
         val response = mockMvc.perform(get("/context/alpha"))
                 .andExpect(status().isOk())
                 .andReturn().getResponse();
-        String responseContent = response.getContentAsString();
-        Map<String, Object> responseMap = unJson(responseContent);
+        val responseContent = response.getContentAsString();
+        val responseMap = unJson(responseContent);
         assertEquals("GuardContextAlpha", responseMap.get("prefix"));
         assertEquals("GuardContextAlpha", responseMap.get("suffix"));
     }
@@ -60,8 +58,8 @@ public class ContextTest {
         val response = mockMvc.perform(get("/context/beta"))
                 .andExpect(status().isOk())
                 .andReturn().getResponse();
-        String responseContent = response.getContentAsString();
-        Map<String, Object> responseMap = unJson(responseContent);
+        val responseContent = response.getContentAsString();
+        val responseMap = unJson(responseContent);
         assertEquals("GuardContextBeta", responseMap.get("prefix"));
         assertEquals("GuardContextBeta", responseMap.get("suffix"));
     }
@@ -72,8 +70,8 @@ public class ContextTest {
         val response = mockMvc.perform(get("/context/error"))
                 .andExpect(status().isOk())
                 .andReturn().getResponse();
-        String responseContent = response.getContentAsString();
-        Map<String, Object> responseMap = unJson(responseContent);
+        val responseContent = response.getContentAsString();
+        val responseMap = unJson(responseContent);
         assertEquals("Error", responseMap.get("prefix"));
         assertEquals("Error", responseMap.get("suffix"));
     }

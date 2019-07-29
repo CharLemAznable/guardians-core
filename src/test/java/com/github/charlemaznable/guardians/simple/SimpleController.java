@@ -40,4 +40,11 @@ public class SimpleController {
     public void guardingError(HttpServletRequest request, HttpServletResponse response) {
         Http.responseJson(response, json(Http.fetchParameterMap(request)));
     }
+
+    @PreGuardian(FalseGuardian.class)
+    @PostGuardian(FalseGuardian.class)
+    @RequestMapping("/guardingFalse")
+    public void guardingFalse(HttpServletRequest request, HttpServletResponse response) {
+        Http.responseJson(response, json(Http.fetchParameterMap(request)));
+    }
 }

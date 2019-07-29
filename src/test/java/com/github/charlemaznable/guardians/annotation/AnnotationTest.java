@@ -16,8 +16,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.util.Map;
-
 import static com.github.charlemaznable.codec.Json.unJson;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -48,8 +46,8 @@ public class AnnotationTest {
         val response = mockMvc.perform(get("/annotation/default"))
                 .andExpect(status().isOk())
                 .andReturn().getResponse();
-        String responseContent = response.getContentAsString();
-        Map<String, Object> responseMap = unJson(responseContent);
+        val responseContent = response.getContentAsString();
+        val responseMap = unJson(responseContent);
         assertEquals("DEFAULT", responseMap.get("prefix"));
         assertEquals("DEFAULT", responseMap.get("suffix"));
     }
@@ -60,8 +58,8 @@ public class AnnotationTest {
         val response = mockMvc.perform(get("/annotation/alpha"))
                 .andExpect(status().isOk())
                 .andReturn().getResponse();
-        String responseContent = response.getContentAsString();
-        Map<String, Object> responseMap = unJson(responseContent);
+        val responseContent = response.getContentAsString();
+        val responseMap = unJson(responseContent);
         assertEquals("ALPHA", responseMap.get("prefix"));
         assertEquals("ALPHA", responseMap.get("suffix"));
     }
@@ -72,8 +70,8 @@ public class AnnotationTest {
         val response = mockMvc.perform(get("/annotation/beta"))
                 .andExpect(status().isOk())
                 .andReturn().getResponse();
-        String responseContent = response.getContentAsString();
-        Map<String, Object> responseMap = unJson(responseContent);
+        val responseContent = response.getContentAsString();
+        val responseMap = unJson(responseContent);
         assertEquals("BETA", responseMap.get("prefix"));
         assertEquals("BETA", responseMap.get("suffix"));
     }
@@ -84,8 +82,8 @@ public class AnnotationTest {
         val response = mockMvc.perform(get("/annotation/gamma"))
                 .andExpect(status().isOk())
                 .andReturn().getResponse();
-        String responseContent = response.getContentAsString();
-        Map<String, Object> responseMap = unJson(responseContent);
+        val responseContent = response.getContentAsString();
+        val responseMap = unJson(responseContent);
         assertEquals("GAMMA", responseMap.get("prefix"));
         assertEquals("GAMMA", responseMap.get("suffix"));
     }
@@ -96,8 +94,8 @@ public class AnnotationTest {
         val response = mockMvc.perform(get("/annotation/delta"))
                 .andExpect(status().isOk())
                 .andReturn().getResponse();
-        String responseContent = response.getContentAsString();
-        Map<String, Object> responseMap = unJson(responseContent);
+        val responseContent = response.getContentAsString();
+        val responseMap = unJson(responseContent);
         assertEquals("DELTA", responseMap.get("prefix"));
         assertEquals("DELTA", responseMap.get("suffix"));
     }
@@ -108,8 +106,8 @@ public class AnnotationTest {
         val response = mockMvc.perform(get("/annotation/error"))
                 .andExpect(status().isOk())
                 .andReturn().getResponse();
-        String responseContent = response.getContentAsString();
-        Map<String, Object> responseMap = unJson(responseContent);
+        val responseContent = response.getContentAsString();
+        val responseMap = unJson(responseContent);
         assertEquals("Empty", responseMap.get("prefix"));
         assertEquals("Empty", responseMap.get("suffix"));
     }

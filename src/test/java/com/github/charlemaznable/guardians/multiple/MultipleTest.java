@@ -16,10 +16,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.util.Map;
-
 import static com.github.charlemaznable.codec.Json.unJson;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -48,8 +47,8 @@ public class MultipleTest {
         val response = mockMvc.perform(get("/multiple/default"))
                 .andExpect(status().isOk())
                 .andReturn().getResponse();
-        String responseContent = response.getContentAsString();
-        Map<String, Object> responseMap = unJson(responseContent);
+        val responseContent = response.getContentAsString();
+        val responseMap = unJson(responseContent);
         assertEquals("MultipleAlphaGuardianMultipleBetaGuardian", responseMap.get("prefix"));
         assertEquals("MultipleBetaGuardianMultipleAlphaGuardian", responseMap.get("suffix"));
     }
@@ -60,8 +59,8 @@ public class MultipleTest {
         val response = mockMvc.perform(get("/multiple/compose"))
                 .andExpect(status().isOk())
                 .andReturn().getResponse();
-        String responseContent = response.getContentAsString();
-        Map<String, Object> responseMap = unJson(responseContent);
+        val responseContent = response.getContentAsString();
+        val responseMap = unJson(responseContent);
         assertEquals("MultipleAlphaGuardianMultipleBetaGuardian", responseMap.get("prefix"));
         assertEquals("MultipleBetaGuardianMultipleAlphaGuardian", responseMap.get("suffix"));
     }
@@ -72,9 +71,20 @@ public class MultipleTest {
         val response = mockMvc.perform(get("/multiple/plain"))
                 .andExpect(status().isOk())
                 .andReturn().getResponse();
-        String responseContent = response.getContentAsString();
-        Map<String, Object> responseMap = unJson(responseContent);
+        val responseContent = response.getContentAsString();
+        val responseMap = unJson(responseContent);
         assertEquals("MultipleAlphaGuardianMultipleBetaGuardian", responseMap.get("prefix"));
         assertEquals("MultipleBetaGuardianMultipleAlphaGuardian", responseMap.get("suffix"));
+    }
+
+    @SneakyThrows
+    @Test
+    public void testNone() {
+        val response = mockMvc.perform(get("/multiple/none"))
+                .andExpect(status().isOk())
+                .andReturn().getResponse();
+        val responseContent = response.getContentAsString();
+        val responseMap = unJson(responseContent);
+        assertTrue(responseMap.isEmpty());
     }
 }

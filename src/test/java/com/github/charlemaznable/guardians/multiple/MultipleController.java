@@ -1,5 +1,6 @@
 package com.github.charlemaznable.guardians.multiple;
 
+import com.github.charlemaznable.guardians.NoneGuardian;
 import com.github.charlemaznable.guardians.PostGuardian;
 import com.github.charlemaznable.guardians.PreGuardian;
 import com.github.charlemaznable.net.Http;
@@ -33,6 +34,12 @@ public class MultipleController {
     @PostGuardian(MultipleAlphaGuardian.class)
     @RequestMapping("/plain")
     public void plain(HttpServletRequest request, HttpServletResponse response) {
+        Http.responseJson(response, json(Http.fetchParameterMap(request)));
+    }
+
+    @NoneGuardian
+    @RequestMapping("/none")
+    public void none(HttpServletRequest request, HttpServletResponse response) {
         Http.responseJson(response, json(Http.fetchParameterMap(request)));
     }
 }

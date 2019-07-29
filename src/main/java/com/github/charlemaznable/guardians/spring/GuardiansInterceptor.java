@@ -1,6 +1,7 @@
 package com.github.charlemaznable.guardians.spring;
 
 import com.github.charlemaznable.guardians.Guard;
+import com.github.charlemaznable.guardians.NoneGuardian;
 import com.github.charlemaznable.guardians.PostGuardian;
 import com.github.charlemaznable.guardians.PostGuardians;
 import com.github.charlemaznable.guardians.PreGuardian;
@@ -21,6 +22,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 
 import static com.github.charlemaznable.lang.Clz.invokeQuietly;
@@ -37,6 +39,8 @@ import static org.springframework.core.annotation.AnnotatedElementUtils.findMerg
 @Component
 public class GuardiansInterceptor implements HandlerInterceptor {
 
+    private Cache<HandlerGuardiansCacheKey, Optional<NoneGuardian>>
+            noneGuardianAnnotationCache = CacheBuilder.newBuilder().build();
     private Cache<HandlerGuardiansCacheKey, List<PreGuardian>>
             preGuardiansAnnotationCache = CacheBuilder.newBuilder().build();
     private Cache<HandlerGuardiansCacheKey, List<PostGuardian>>
@@ -50,8 +54,12 @@ public class GuardiansInterceptor implements HandlerInterceptor {
 
         if (!(handler instanceof HandlerMethod)) return true;
         val handlerMethod = (HandlerMethod) handler;
-
         val cacheKey = new HandlerGuardiansCacheKey(handlerMethod);
+
+        val noneGuardian = noneGuardianAnnotationCache.get(cacheKey,
+                () -> findNoneGuardian(cacheKey));
+        if (noneGuardian.isPresent()) return true;
+
         val preGuardians = preGuardiansAnnotationCache.get(cacheKey,
                 () -> findGuardians(cacheKey, PreGuardian.class,
                         PreGuardians.class, PreGuardians::value));
@@ -89,8 +97,12 @@ public class GuardiansInterceptor implements HandlerInterceptor {
 
         if (!(handler instanceof HandlerMethod)) return;
         val handlerMethod = (HandlerMethod) handler;
-
         val cacheKey = new HandlerGuardiansCacheKey(handlerMethod);
+
+        val noneGuardian = noneGuardianAnnotationCache.get(cacheKey,
+                () -> findNoneGuardian(cacheKey));
+        if (noneGuardian.isPresent()) return;
+
         val postGuardians = postGuardiansAnnotationCache.get(cacheKey,
                 () -> findGuardians(cacheKey, PostGuardian.class,
                         PostGuardians.class, PostGuardians::value));
@@ -115,6 +127,16 @@ public class GuardiansInterceptor implements HandlerInterceptor {
                 invokeQuietly(guardian, guardMethod, parameters);
             }
         }
+    }
+
+    private Optional<NoneGuardian> findNoneGuardian(HandlerGuardiansCacheKey cacheKey) {
+        val methodNoneGuardian = findMergedAnnotation(cacheKey.getMethod(), NoneGuardian.class);
+        if (null != methodNoneGuardian) return Optional.of(methodNoneGuardian);
+
+        val classNoneGuardian = findMergedAnnotation(cacheKey.getDeclaringClass(), NoneGuardian.class);
+        if (null != classNoneGuardian) return Optional.of(classNoneGuardian);
+
+        return Optional.empty();
     }
 
     private <Guardian extends Annotation, Guardians extends Annotation>
