@@ -15,7 +15,6 @@ import static com.github.charlemaznable.codec.Json.json;
 @NoneGuardian
 public class NoneController {
 
-    @NoneGuardian
     @RequestMapping("/none")
     public void none(HttpServletRequest request, HttpServletResponse response) {
         Http.responseJson(response, json(Http.fetchParameterMap(request)));
