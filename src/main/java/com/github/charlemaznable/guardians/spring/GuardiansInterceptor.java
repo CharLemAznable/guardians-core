@@ -68,7 +68,7 @@ public class GuardiansInterceptor implements HandlerInterceptor {
                         PreGuardians.class, PreGuardians::value));
         if (preGuardians.size() == 0) return true;
 
-        GuardianContext.setup();
+        GuardianContext.setup(request, response);
         val mutableRequest = mutableRequest(request);
         val mutableResponse = mutableResponse(response);
         for (val preGuardian : preGuardians) {
