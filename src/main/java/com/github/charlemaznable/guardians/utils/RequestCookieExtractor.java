@@ -17,13 +17,13 @@ import static com.github.charlemaznable.lang.Condition.nullThen;
 @AllArgsConstructor
 public class RequestCookieExtractor implements Function<HttpServletRequest, Cookie>, KeyedStringValueExtractor {
 
-    private String cookieName;
+    private String keyName;
 
     @Override
     public Cookie apply(HttpServletRequest request) {
         val cookies = nullThen(request.getCookies(), () -> new Cookie[]{});
         for (val cookie : cookies) {
-            if (cookie.getName().equals(cookieName)) return cookie;
+            if (cookie.getName().equals(getKeyName())) return cookie;
         }
         return null;
     }

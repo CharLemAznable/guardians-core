@@ -15,10 +15,10 @@ public class RequestHeaderExtractorTest {
         request.addHeader("key", "value");
 
         val extractor = new RequestHeaderExtractor("key");
-        assertEquals("key", extractor.getHeaderName());
+        assertEquals("key", extractor.getKeyName());
         assertEquals("value", extractor.extract(request));
-        extractor.setHeaderName("none");
-        assertEquals("none", extractor.getHeaderName());
+        extractor.setKeyName("none");
+        assertEquals("none", extractor.getKeyName());
         assertNull(extractor.extract(request));
     }
 }

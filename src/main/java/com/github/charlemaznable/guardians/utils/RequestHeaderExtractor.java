@@ -12,11 +12,11 @@ import java.util.function.Function;
 @AllArgsConstructor
 public class RequestHeaderExtractor implements Function<HttpServletRequest, String>, KeyedStringValueExtractor {
 
-    private String headerName;
+    private String keyName;
 
     @Override
     public String apply(HttpServletRequest request) {
-        return request.getHeader(headerName);
+        return request.getHeader(keyName);
     }
 
     @Override

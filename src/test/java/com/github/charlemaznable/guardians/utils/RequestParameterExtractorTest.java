@@ -15,10 +15,10 @@ public class RequestParameterExtractorTest {
         request.setParameter("key", "value");
 
         val extractor = new RequestParameterExtractor("key");
-        assertEquals("key", extractor.getParameterName());
+        assertEquals("key", extractor.getKeyName());
         assertEquals("value", extractor.extract(request));
-        extractor.setParameterName("none");
-        assertEquals("none", extractor.getParameterName());
+        extractor.setKeyName("none");
+        assertEquals("none", extractor.getKeyName());
         assertNull(extractor.extract(request));
     }
 }

@@ -1,5 +1,6 @@
 package com.github.charlemaznable.guardians.utils;
 
+import com.github.charlemaznable.net.Http;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -7,16 +8,18 @@ import lombok.Setter;
 import javax.servlet.http.HttpServletRequest;
 import java.util.function.Function;
 
+import static com.github.charlemaznable.lang.Mapp.getStr;
+
 @Getter
 @Setter
 @AllArgsConstructor
-public class RequestParameterExtractor implements Function<HttpServletRequest, String>, KeyedStringValueExtractor {
+public class RequestPathVariableExtractor implements Function<HttpServletRequest, String>, KeyedStringValueExtractor {
 
     private String keyName;
 
     @Override
     public String apply(HttpServletRequest request) {
-        return request.getParameter(keyName);
+        return getStr(Http.fetchPathVariableMap(request), keyName);
     }
 
     @Override
