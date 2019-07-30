@@ -10,12 +10,17 @@ import java.util.function.Function;
 @Getter
 @Setter
 @AllArgsConstructor
-public class RequestParameterExtractor implements Function<HttpServletRequest, String> {
+public class RequestParameterExtractor implements Function<HttpServletRequest, String>, KeyedStringValueExtractor {
 
     private String parameterName;
 
     @Override
     public String apply(HttpServletRequest request) {
         return request.getParameter(parameterName);
+    }
+
+    @Override
+    public String extract(HttpServletRequest request) {
+        return apply(request);
     }
 }

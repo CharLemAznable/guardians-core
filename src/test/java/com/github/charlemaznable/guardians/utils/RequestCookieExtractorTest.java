@@ -18,9 +18,9 @@ public class RequestCookieExtractorTest {
 
         val extractor = new RequestCookieExtractor("key");
         assertEquals("key", extractor.getCookieName());
-        assertEquals(mockCookie, extractor.apply(request));
+        assertEquals("value", extractor.extract(request));
         extractor.setCookieName("none");
         assertEquals("none", extractor.getCookieName());
-        assertNull(extractor.apply(request));
+        assertNull(extractor.extract(request));
     }
 }

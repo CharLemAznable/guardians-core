@@ -16,9 +16,9 @@ public class RequestParameterExtractorTest {
 
         val extractor = new RequestParameterExtractor("key");
         assertEquals("key", extractor.getParameterName());
-        assertEquals("value", extractor.apply(request));
+        assertEquals("value", extractor.extract(request));
         extractor.setParameterName("none");
         assertEquals("none", extractor.getParameterName());
-        assertNull(extractor.apply(request));
+        assertNull(extractor.extract(request));
     }
 }
