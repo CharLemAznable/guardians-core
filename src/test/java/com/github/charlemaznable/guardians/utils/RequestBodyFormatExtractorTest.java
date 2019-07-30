@@ -6,6 +6,9 @@ import lombok.val;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 
+import static com.github.charlemaznable.codec.Bytes.bytes;
+import static com.github.charlemaznable.codec.Bytes.string;
+import static com.google.common.base.Charsets.ISO_8859_1;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
@@ -36,19 +39,20 @@ public class RequestBodyFormatExtractorTest {
 
     @Test
     public void testRequestBodyExtractorJson() {
-        val request = new MutableHttpServletRequest(new MockHttpServletRequest());
-        request.setRequestBody("{\"key1\":\"value1\",\"key2\":\"表单\",\"key3\":\"\"}");
+        val request = new MutableHttpServletRequest(new MockHttpServletRequest(), ISO_8859_1);
+        request.setRequestBody(string(bytes("{\"key1\":\"value1\",\"key2\":\"表单\",\"key3\":\"\"}"), ISO_8859_1));
 
         val formatExtractor = new RequestBodyFormatExtractor("key1");
         formatExtractor.setParser(RequestBodyParser.Json);
         assertEquals(RequestBodyParser.Json, formatExtractor.getParser());
-        assertEquals("UTF-8", formatExtractor.getCharsetName());
+        formatExtractor.setCharsetName("ISO-8859-1");
+        assertEquals("ISO-8859-1", formatExtractor.getCharsetName());
         assertEquals("key1", formatExtractor.getKeyName());
         assertEquals("value1", formatExtractor.extract(request));
 
         formatExtractor.setKeyName("key2");
         assertEquals("key2", formatExtractor.getKeyName());
-        assertEquals("表单", formatExtractor.extract(request));
+        assertEquals("表单", string(bytes(formatExtractor.extract(request), ISO_8859_1)));
 
         formatExtractor.setKeyName("key3");
         assertEquals("key3", formatExtractor.getKeyName());
