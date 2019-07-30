@@ -27,6 +27,7 @@ import java.util.function.Function;
 
 import static com.github.charlemaznable.lang.Clz.invokeQuietly;
 import static com.github.charlemaznable.lang.Clz.isAssignable;
+import static com.github.charlemaznable.lang.Condition.checkNull;
 import static com.github.charlemaznable.lang.Condition.nullThen;
 import static com.github.charlemaznable.lang.Listt.newArrayList;
 import static com.github.charlemaznable.spring.MutableHttpServletUtils.mutableRequest;
@@ -45,6 +46,8 @@ public class GuardiansInterceptor implements HandlerInterceptor {
             preGuardiansAnnotationCache = CacheBuilder.newBuilder().build();
     private Cache<HandlerGuardiansCacheKey, List<PostGuardian>>
             postGuardiansAnnotationCache = CacheBuilder.newBuilder().build();
+    private Cache<Class<?>, List<Method>>
+            guardianMethodListCache = CacheBuilder.newBuilder().build();
 
     @SneakyThrows
     @Override
@@ -76,7 +79,8 @@ public class GuardiansInterceptor implements HandlerInterceptor {
             }
 
             val contextTypes = nullThen(preGuardian.context(), () -> new Class<?>[0]);
-            val guardMethods = getMethodsListWithAnnotation(guardianType, Guard.class);
+            val guardMethods = guardianMethodListCache.get(guardianType,
+                    () -> findGuardMethodList(guardianType));
             for (val guardMethod : guardMethods) {
                 if (Boolean.TYPE != guardMethod.getReturnType()) continue;
                 val parameters = buildGuardParameters(guardMethod,
@@ -119,7 +123,8 @@ public class GuardiansInterceptor implements HandlerInterceptor {
             }
 
             val contextTypes = nullThen(postGuardian.context(), () -> new Class<?>[0]);
-            val guardMethods = getMethodsListWithAnnotation(guardianType, Guard.class);
+            val guardMethods = guardianMethodListCache.get(guardianType,
+                    () -> findGuardMethodList(guardianType));
             for (val guardMethod : guardMethods) {
                 if (Void.TYPE != guardMethod.getReturnType()) continue;
                 val parameters = buildGuardParameters(guardMethod,
@@ -156,6 +161,19 @@ public class GuardiansInterceptor implements HandlerInterceptor {
         if (null != classGuardian) return newArrayList(classGuardian);
 
         return newArrayList();
+    }
+
+    List<Method> findGuardMethodList(Class<?> guardianType) {
+        List<Method> guardMethodList = newArrayList();
+        val allMethods = getMethodsListWithAnnotation(guardianType, Guard.class);
+        for (val annotatedMethod : allMethods) {
+            if (guardianType == annotatedMethod.getDeclaringClass() ||
+                    checkNull(findMergedAnnotation(annotatedMethod,
+                            Guard.class), () -> false, Guard::inherited)) {
+                guardMethodList.add(annotatedMethod);
+            }
+        }
+        return guardMethodList;
     }
 
     @SuppressWarnings("unchecked")

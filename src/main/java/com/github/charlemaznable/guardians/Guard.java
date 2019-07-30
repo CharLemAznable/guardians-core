@@ -1,5 +1,7 @@
 package com.github.charlemaznable.guardians;
 
+import org.springframework.core.annotation.AliasFor;
+
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -10,4 +12,10 @@ import java.lang.annotation.Target;
 @Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Guard {
+
+    @AliasFor("inherited")
+    boolean value() default false;
+
+    @AliasFor("value")
+    boolean inherited() default false;
 }
