@@ -35,11 +35,25 @@ public class ExceptionController {
         Http.responseText(response, "SUCCESS");
     }
 
+    @PreGuardian(ExceptionGuardian.class)
+    @PostGuardian(ExceptionPostUnhandledGuardian.class)
+    @RequestMapping("/exceptionUnhandled")
+    public void exceptionUnhandled(HttpServletRequest request, HttpServletResponse response) {
+        Http.responseText(response, "SUCCESS");
+    }
+
     @PreGuardian(ExceptionRuntimeGuardian.class)
     @PostGuardian(ExceptionPostGuardian.class)
     @RequestMapping("/runtime")
     public void runtime(HttpServletRequest request, HttpServletResponse response) {
         Http.responseText(response, "SUCCESS");
+    }
+
+    @PreGuardian(ExceptionTrueGuardian.class)
+    @PostGuardian(ExceptionPostGuardian.class)
+    @RequestMapping("/runtimeBiz")
+    public void runtimeBiz(HttpServletRequest request, HttpServletResponse response) {
+        throw new RuntimeException("BusinessRuntimeException");
     }
 
     @ExceptionHandler(RuntimeException.class)

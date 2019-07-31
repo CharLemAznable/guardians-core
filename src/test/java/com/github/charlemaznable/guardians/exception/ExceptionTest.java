@@ -71,12 +71,31 @@ public class ExceptionTest {
 
     @SneakyThrows
     @Test
-    public void testRuntime() {
+    public void testExceptionUnhandled() {
+        val response = mockMvc.perform(get("/exception/exceptionUnhandled"))
+                .andExpect(status().isOk())
+                .andReturn().getResponse();
+        val responseContent = response.getContentAsString();
+        assertEquals("No exception", responseContent);
+    }
 
+    @SneakyThrows
+    @Test
+    public void testRuntime() {
         val response = mockMvc.perform(get("/exception/runtime"))
                 .andExpect(status().isOk())
                 .andReturn().getResponse();
         val responseContent = response.getContentAsString();
         assertEquals("ExceptionHandler: ExceptionRuntimeGuardian", responseContent);
+    }
+
+    @SneakyThrows
+    @Test
+    public void testRuntimeBiz() {
+        val response = mockMvc.perform(get("/exception/runtimeBiz"))
+                .andExpect(status().isOk())
+                .andReturn().getResponse();
+        val responseContent = response.getContentAsString();
+        assertEquals("ExceptionHandler: BusinessRuntimeExceptionNo exception", responseContent);
     }
 }
