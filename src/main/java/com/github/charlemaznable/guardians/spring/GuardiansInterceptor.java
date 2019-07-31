@@ -227,7 +227,8 @@ public class GuardiansInterceptor implements HandlerInterceptor {
                 if (null != parameters[i]) continue;
                 parameters[i] = findMergedAnnotation(cacheKey.getDeclaringClass(), annotationType);
             } else if (isAssignable(parameterType, Exception.class)) {
-                parameters[i] = exception;
+                if (null == exception) continue;
+                parameters[i] = isAssignable(exception.getClass(), parameterType) ? exception : null;
             } else {
                 parameters[i] = null;
                 for (val contextType : contextTypes) {
