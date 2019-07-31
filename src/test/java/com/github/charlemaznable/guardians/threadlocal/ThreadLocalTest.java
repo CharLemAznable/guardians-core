@@ -61,6 +61,7 @@ public class ThreadLocalTest {
                 .andReturn().getResponse();
         val responseContent = response.getContentAsString();
         val responseMap = unJson(responseContent);
-        assertNull(responseMap);
+        assertNull(responseMap.get("prefix"));
+        assertEquals("PreBetaGuardian", responseMap.get("context"));
     }
 }

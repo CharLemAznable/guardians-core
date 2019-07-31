@@ -6,6 +6,7 @@ import com.github.charlemaznable.guardians.PostGuardian;
 import com.github.charlemaznable.guardians.PostGuardians;
 import com.github.charlemaznable.guardians.PreGuardian;
 import com.github.charlemaznable.guardians.PreGuardians;
+import com.github.charlemaznable.guardians.exception.GuardianException;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import lombok.EqualsAndHashCode;
@@ -49,11 +50,39 @@ public class GuardiansInterceptor implements HandlerInterceptor {
     private Cache<Class<?>, List<Method>>
             guardianMethodListCache = CacheBuilder.newBuilder().build();
 
-    @SneakyThrows
     @Override
     public boolean preHandle(HttpServletRequest request,
                              HttpServletResponse response,
                              Object handler) {
+        try {
+            GuardianContext.setup(request, response);
+            return preHandleInternal(request, response, handler);
+        } catch (GuardianReturnFalse | GuardianException ex) {
+            val e = ex instanceof GuardianReturnFalse ? null : ex;
+            afterCompletionInternal(request, response, handler, e);
+            GuardianContext.teardown();
+            return false;
+        } catch (Exception ex) {
+            GuardianContext.teardown();
+            throw ex;
+        }
+    }
+
+    @Override
+    public void afterCompletion(HttpServletRequest request,
+                                HttpServletResponse response,
+                                Object handler, Exception ex) {
+        try {
+            afterCompletionInternal(request, response, handler, ex);
+        } finally {
+            GuardianContext.teardown();
+        }
+    }
+
+    @SneakyThrows
+    public boolean preHandleInternal(HttpServletRequest request,
+                                     HttpServletResponse response,
+                                     Object handler) {
 
         if (!(handler instanceof HandlerMethod)) return true;
         val handlerMethod = (HandlerMethod) handler;
@@ -68,7 +97,6 @@ public class GuardiansInterceptor implements HandlerInterceptor {
                         PreGuardians.class, PreGuardians::value));
         if (preGuardians.size() == 0) return true;
 
-        GuardianContext.setup(request, response);
         val mutableRequest = mutableRequest(request);
         val mutableResponse = mutableResponse(response);
         for (val preGuardian : preGuardians) {
@@ -85,23 +113,20 @@ public class GuardiansInterceptor implements HandlerInterceptor {
             for (val guardMethod : guardMethods) {
                 if (Boolean.TYPE != guardMethod.getReturnType()) continue;
                 val parameters = buildGuardParameters(guardMethod,
-                        mutableRequest, mutableResponse, contextTypes, cacheKey);
+                        mutableRequest, mutableResponse, contextTypes, cacheKey, null);
                 val result = invokeQuietly(guardian, guardMethod, parameters);
                 if (!(result instanceof Boolean) || !(Boolean) result) {
-                    GuardianContext.teardown();
-                    return false;
+                    throw new GuardianReturnFalse();
                 }
             }
         }
-
         return true;
     }
 
     @SneakyThrows
-    @Override
-    public void afterCompletion(HttpServletRequest request,
-                                HttpServletResponse response,
-                                Object handler, Exception ex) {
+    public void afterCompletionInternal(HttpServletRequest request,
+                                        HttpServletResponse response,
+                                        Object handler, Exception ex) {
 
         if (!(handler instanceof HandlerMethod)) return;
         val handlerMethod = (HandlerMethod) handler;
@@ -132,11 +157,10 @@ public class GuardiansInterceptor implements HandlerInterceptor {
             for (val guardMethod : guardMethods) {
                 if (Void.TYPE != guardMethod.getReturnType()) continue;
                 val parameters = buildGuardParameters(guardMethod,
-                        mutableRequest, mutableResponse, contextTypes, cacheKey);
+                        mutableRequest, mutableResponse, contextTypes, cacheKey, ex);
                 invokeQuietly(guardian, guardMethod, parameters);
             }
         }
-        GuardianContext.teardown();
     }
 
     private Optional<NoneGuardian> findNoneGuardian(HandlerGuardiansCacheKey cacheKey) {
@@ -186,7 +210,8 @@ public class GuardiansInterceptor implements HandlerInterceptor {
                                           HttpServletRequest request,
                                           HttpServletResponse response,
                                           Class<?>[] contextTypes,
-                                          HandlerGuardiansCacheKey cacheKey) {
+                                          HandlerGuardiansCacheKey cacheKey,
+                                          Exception exception) {
 
         val parameterTypes = guardMethod.getParameterTypes();
         val parameters = new Object[parameterTypes.length];
@@ -201,6 +226,8 @@ public class GuardiansInterceptor implements HandlerInterceptor {
                 parameters[i] = findMergedAnnotation(cacheKey.getMethod(), annotationType);
                 if (null != parameters[i]) continue;
                 parameters[i] = findMergedAnnotation(cacheKey.getDeclaringClass(), annotationType);
+            } else if (isAssignable(parameterType, Exception.class)) {
+                parameters[i] = exception;
             } else {
                 parameters[i] = null;
                 for (val contextType : contextTypes) {
@@ -228,5 +255,10 @@ public class GuardiansInterceptor implements HandlerInterceptor {
             this.method = handlerMethod.getMethod();
             this.declaringClass = this.method.getDeclaringClass();
         }
+    }
+
+    static class GuardianReturnFalse extends RuntimeException {
+
+        private static final long serialVersionUID = -1946637272350492943L;
     }
 }
