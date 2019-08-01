@@ -5,6 +5,7 @@ import lombok.val;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 
+import static com.github.charlemaznable.guardians.utils.RequestKeyedValueExtractType.Path;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.springframework.web.servlet.HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE;
@@ -16,11 +17,12 @@ public class RequestPathVariableExtractorTest {
         val request = new MockHttpServletRequest();
         request.setAttribute(URI_TEMPLATE_VARIABLES_ATTRIBUTE, Mapp.of("key", "value"));
 
-        val extractor = new RequestPathVariableExtractor("key");
-        assertEquals("key", extractor.getKeyName());
-        assertEquals("value", extractor.extract(request));
-        extractor.setKeyName("none");
-        assertEquals("none", extractor.getKeyName());
-        assertNull(extractor.extract(request));
+        val extractor1 = Path.extractor("key");
+        assertEquals("key", extractor1.getKeyName());
+        assertEquals("value", extractor1.extract(request));
+
+        val extractor2 = Path.extractor("none");
+        assertEquals("none", extractor2.getKeyName());
+        assertNull(extractor2.extract(request));
     }
 }

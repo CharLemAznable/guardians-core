@@ -4,6 +4,7 @@ import lombok.val;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 
+import static com.github.charlemaznable.guardians.utils.RequestKeyedValueExtractType.Header;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
@@ -14,11 +15,12 @@ public class RequestHeaderExtractorTest {
         val request = new MockHttpServletRequest();
         request.addHeader("key", "value");
 
-        val extractor = new RequestHeaderExtractor("key");
-        assertEquals("key", extractor.getKeyName());
-        assertEquals("value", extractor.extract(request));
-        extractor.setKeyName("none");
-        assertEquals("none", extractor.getKeyName());
-        assertNull(extractor.extract(request));
+        val extractor1 = Header.extractor("key");
+        assertEquals("key", extractor1.getKeyName());
+        assertEquals("value", extractor1.extract(request));
+
+        val extractor2 = Header.extractor("none");
+        assertEquals("none", extractor2.getKeyName());
+        assertNull(extractor2.extract(request));
     }
 }

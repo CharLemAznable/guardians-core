@@ -2,7 +2,6 @@ package com.github.charlemaznable.guardians.utils;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.val;
 
 import javax.servlet.http.Cookie;
@@ -13,7 +12,6 @@ import static com.github.charlemaznable.lang.Condition.notNullThen;
 import static com.github.charlemaznable.lang.Condition.nullThen;
 
 @Getter
-@Setter
 @AllArgsConstructor
 public class RequestCookieExtractor implements Function<HttpServletRequest, Cookie>, RequestKeyedValueExtractor {
 
@@ -23,7 +21,7 @@ public class RequestCookieExtractor implements Function<HttpServletRequest, Cook
     public Cookie apply(HttpServletRequest request) {
         val cookies = nullThen(request.getCookies(), () -> new Cookie[]{});
         for (val cookie : cookies) {
-            if (cookie.getName().equals(getKeyName())) return cookie;
+            if (cookie.getName().equals(keyName)) return cookie;
         }
         return null;
     }

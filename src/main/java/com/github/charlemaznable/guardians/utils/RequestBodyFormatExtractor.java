@@ -5,7 +5,6 @@ import com.google.common.base.Splitter;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import lombok.SneakyThrows;
 import lombok.val;
 
@@ -20,17 +19,23 @@ import static com.github.charlemaznable.codec.Xml.unXml;
 import static com.github.charlemaznable.guardians.utils.RequestBodyFormatExtractor.RequestBodyParser.Form;
 import static com.github.charlemaznable.lang.Mapp.getStr;
 import static com.github.charlemaznable.lang.Mapp.newHashMap;
+import static com.github.charlemaznable.lang.Str.isNotBlank;
 import static com.google.common.base.Charsets.UTF_8;
 
 @Getter
-@Setter
 @RequiredArgsConstructor
 public class RequestBodyFormatExtractor implements Function<HttpServletRequest, Map>, RequestKeyedValueExtractor {
 
-    private RequestBodyParser parser = Form;
-    private String charsetName = UTF_8.name();
     @NonNull
     private String keyName;
+    private RequestBodyParser parser = Form;
+    private String charsetName = UTF_8.name();
+
+    public RequestBodyFormatExtractor(String keyName, RequestBodyParser parser, String charsetName) {
+        this.keyName = keyName;
+        if (null != parser) this.parser = parser;
+        if (isNotBlank(charsetName)) this.charsetName = charsetName;
+    }
 
     @Override
     public Map apply(HttpServletRequest request) {
