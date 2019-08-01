@@ -52,7 +52,7 @@ public class RequestBodyFormatExtractor implements Function<HttpServletRequest, 
         Form {
             @SneakyThrows
             @Override
-            Map parse(String requestBody, String charsetName) {
+            public Map parse(String requestBody, String charsetName) {
                 val result = new HashMap<String, String>();
                 Iterable<String> pairs = Splitter.on("&").split(requestBody);
                 for (val pair : pairs) {
@@ -70,17 +70,17 @@ public class RequestBodyFormatExtractor implements Function<HttpServletRequest, 
         },
         Json {
             @Override
-            Map parse(String requestBody, String charsetName) {
+            public Map parse(String requestBody, String charsetName) {
                 return newHashMap(unJson(requestBody));
             }
         },
         Xml {
             @Override
-            Map parse(String requestBody, String charsetName) {
+            public Map parse(String requestBody, String charsetName) {
                 return newHashMap(unXml(requestBody));
             }
         };
 
-        abstract Map parse(String requestBody, String charsetName);
+        public abstract Map parse(String requestBody, String charsetName);
     }
 }
