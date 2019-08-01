@@ -2,7 +2,6 @@ package com.github.charlemaznable.guardians.threadlocal;
 
 import com.github.charlemaznable.guardians.PostGuardian;
 import com.github.charlemaznable.guardians.PreGuardian;
-import com.github.charlemaznable.net.Http;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -10,6 +9,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import static com.github.charlemaznable.codec.Json.json;
+import static com.github.charlemaznable.net.Http.fetchParameterMap;
+import static com.github.charlemaznable.net.Http.responseJson;
 
 @Controller
 @RequestMapping("/threadlocal")
@@ -19,12 +20,12 @@ public class ThreadLocalController {
     @RequestMapping("/alpha")
     @PreGuardian(PreAlphaGuardian.class)
     public void alpha(HttpServletRequest request, HttpServletResponse response) {
-        Http.responseJson(response, json(Http.fetchParameterMap(request)));
+        responseJson(response, json(fetchParameterMap(request)));
     }
 
     @RequestMapping("/beta")
     @PreGuardian(PreBetaGuardian.class)
     public void beta(HttpServletRequest request, HttpServletResponse response) {
-        Http.responseJson(response, json(Http.fetchParameterMap(request)));
+        responseJson(response, json(fetchParameterMap(request)));
     }
 }

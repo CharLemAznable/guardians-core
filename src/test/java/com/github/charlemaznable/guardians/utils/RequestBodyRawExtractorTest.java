@@ -5,7 +5,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 
 import static com.github.charlemaznable.codec.Bytes.bytes;
-import static com.google.common.base.Charsets.US_ASCII;
+import static com.github.charlemaznable.codec.Bytes.string;
+import static com.google.common.base.Charsets.ISO_8859_1;
 import static com.google.common.base.Charsets.UTF_8;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -14,15 +15,16 @@ public class RequestBodyRawExtractorTest {
     @Test
     public void testRequestBodyRawExtractor() {
         val request = new MockHttpServletRequest();
-        request.setContent(bytes("HTTP BODY CONTENT"));
+        request.setContent(bytes("HTTP BODY 内容"));
 
         val rawExtractor = new RequestBodyRawExtractor(UTF_8.name());
         assertEquals("UTF-8", rawExtractor.getCharsetName());
-        assertEquals("HTTP BODY CONTENT", rawExtractor.apply(request));
+        assertEquals("HTTP BODY 内容", rawExtractor.apply(request));
 
-        request.setContent(bytes("HTTP BODY CONTENT", US_ASCII));
+        request.setContent(bytes("HTTP BODY 内容"));
 
-        rawExtractor.setCharsetName(US_ASCII.name());
-        assertEquals("HTTP BODY CONTENT", rawExtractor.apply(request));
+        rawExtractor.setCharsetName(ISO_8859_1.name());
+        assertEquals("ISO-8859-1", rawExtractor.getCharsetName());
+        assertEquals("HTTP BODY 内容", string(bytes(rawExtractor.apply(request), ISO_8859_1)));
     }
 }

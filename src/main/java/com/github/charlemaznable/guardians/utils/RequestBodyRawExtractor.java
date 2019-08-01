@@ -1,12 +1,13 @@
 package com.github.charlemaznable.guardians.utils;
 
-import com.github.charlemaznable.net.Http;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.function.Function;
+
+import static com.github.charlemaznable.net.Http.dealRequestBodyStream;
 
 @Getter
 @Setter
@@ -17,6 +18,6 @@ public class RequestBodyRawExtractor implements Function<HttpServletRequest, Str
 
     @Override
     public String apply(HttpServletRequest request) {
-        return Http.dealRequestBodyStream(request, charsetName);
+        return dealRequestBodyStream(request, charsetName);
     }
 }

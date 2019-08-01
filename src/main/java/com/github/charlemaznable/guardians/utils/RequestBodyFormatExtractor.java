@@ -1,6 +1,5 @@
 package com.github.charlemaznable.guardians.utils;
 
-import com.github.charlemaznable.net.Http;
 import com.google.common.base.Splitter;
 import lombok.Getter;
 import lombok.NonNull;
@@ -9,7 +8,6 @@ import lombok.SneakyThrows;
 import lombok.val;
 
 import javax.servlet.http.HttpServletRequest;
-import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
@@ -20,11 +18,13 @@ import static com.github.charlemaznable.guardians.utils.RequestBodyFormatExtract
 import static com.github.charlemaznable.lang.Mapp.getStr;
 import static com.github.charlemaznable.lang.Mapp.newHashMap;
 import static com.github.charlemaznable.lang.Str.isNotBlank;
+import static com.github.charlemaznable.net.Http.dealRequestBodyStream;
 import static com.google.common.base.Charsets.UTF_8;
+import static java.net.URLDecoder.decode;
 
 @Getter
 @RequiredArgsConstructor
-public class RequestBodyFormatExtractor implements Function<HttpServletRequest, Map>, RequestKeyedValueExtractor {
+public class RequestBodyFormatExtractor implements Function<HttpServletRequest, Map<String, Object>>, RequestKeyedValueExtractor {
 
     @NonNull
     private String keyName;
@@ -38,8 +38,8 @@ public class RequestBodyFormatExtractor implements Function<HttpServletRequest, 
     }
 
     @Override
-    public Map apply(HttpServletRequest request) {
-        return parser.parse(Http.dealRequestBodyStream(request, charsetName), charsetName);
+    public Map<String, Object> apply(HttpServletRequest request) {
+        return parser.parse(dealRequestBodyStream(request, charsetName), charsetName);
     }
 
     @Override
@@ -52,16 +52,16 @@ public class RequestBodyFormatExtractor implements Function<HttpServletRequest, 
         Form {
             @SneakyThrows
             @Override
-            public Map parse(String requestBody, String charsetName) {
-                val result = new HashMap<String, String>();
+            public Map<String, Object> parse(String requestBody, String charsetName) {
+                val result = new HashMap<String, Object>();
                 Iterable<String> pairs = Splitter.on("&").split(requestBody);
                 for (val pair : pairs) {
                     int idx = pair.indexOf('=');
                     if (idx == -1) {
-                        result.put(URLDecoder.decode(pair, charsetName), null);
+                        result.put(decode(pair, charsetName), null);
                     } else {
-                        String name = URLDecoder.decode(pair.substring(0, idx), charsetName);
-                        String value = URLDecoder.decode(pair.substring(idx + 1), charsetName);
+                        String name = decode(pair.substring(0, idx), charsetName);
+                        String value = decode(pair.substring(idx + 1), charsetName);
                         result.put(name, value);
                     }
                 }
@@ -70,17 +70,17 @@ public class RequestBodyFormatExtractor implements Function<HttpServletRequest, 
         },
         Json {
             @Override
-            public Map parse(String requestBody, String charsetName) {
+            public Map<String, Object> parse(String requestBody, String charsetName) {
                 return newHashMap(unJson(requestBody));
             }
         },
         Xml {
             @Override
-            public Map parse(String requestBody, String charsetName) {
+            public Map<String, Object> parse(String requestBody, String charsetName) {
                 return newHashMap(unXml(requestBody));
             }
         };
 
-        public abstract Map parse(String requestBody, String charsetName);
+        public abstract Map<String, Object> parse(String requestBody, String charsetName);
     }
 }

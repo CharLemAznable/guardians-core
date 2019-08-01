@@ -13,7 +13,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import static com.github.charlemaznable.codec.Json.unJson;
@@ -21,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = SimpleConfiguration.class)
@@ -36,7 +36,7 @@ public class SimpleTest {
 
     @BeforeAll
     public void setup() {
-        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
+        mockMvc = webAppContextSetup(webApplicationContext)
                 .addFilters(mutableHttpServletFilter)
                 .build();
     }
