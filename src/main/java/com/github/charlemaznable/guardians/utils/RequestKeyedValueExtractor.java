@@ -2,7 +2,7 @@ package com.github.charlemaznable.guardians.utils;
 
 import javax.servlet.http.HttpServletRequest;
 
-public interface KeyedStringValueExtractor {
+public interface RequestKeyedValueExtractor {
 
     String getKeyName();
 

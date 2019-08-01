@@ -25,7 +25,7 @@ import static com.google.common.base.Charsets.UTF_8;
 @Getter
 @Setter
 @RequiredArgsConstructor
-public class RequestBodyFormatExtractor implements Function<HttpServletRequest, Map>, KeyedStringValueExtractor {
+public class RequestBodyFormatExtractor implements Function<HttpServletRequest, Map>, RequestKeyedValueExtractor {
 
     private RequestBodyParser parser = Form;
     private String charsetName = UTF_8.name();

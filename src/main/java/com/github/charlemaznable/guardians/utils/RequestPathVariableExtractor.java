@@ -13,7 +13,7 @@ import static com.github.charlemaznable.lang.Mapp.getStr;
 @Getter
 @Setter
 @AllArgsConstructor
-public class RequestPathVariableExtractor implements Function<HttpServletRequest, String>, KeyedStringValueExtractor {
+public class RequestPathVariableExtractor implements Function<HttpServletRequest, String>, RequestKeyedValueExtractor {
 
     private String keyName;
 

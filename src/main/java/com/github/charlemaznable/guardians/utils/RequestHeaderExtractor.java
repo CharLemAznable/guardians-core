@@ -10,7 +10,7 @@ import java.util.function.Function;
 @Getter
 @Setter
 @AllArgsConstructor
-public class RequestHeaderExtractor implements Function<HttpServletRequest, String>, KeyedStringValueExtractor {
+public class RequestHeaderExtractor implements Function<HttpServletRequest, String>, RequestKeyedValueExtractor {
 
     private String keyName;
 
