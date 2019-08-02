@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 
 @Getter
 @AllArgsConstructor
-public class RequestHeaderExtractor implements RequestKeyedValueExtractor {
+public class RequestHeaderExtractor implements RequestValueExtractor {
 
     private String keyName;
 

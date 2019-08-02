@@ -10,7 +10,7 @@ import static com.github.charlemaznable.codec.Bytes.string;
 import static com.github.charlemaznable.guardians.utils.RequestBodyFormatExtractor.RequestBodyParser.Form;
 import static com.github.charlemaznable.guardians.utils.RequestBodyFormatExtractor.RequestBodyParser.Json;
 import static com.github.charlemaznable.guardians.utils.RequestBodyFormatExtractor.RequestBodyParser.Xml;
-import static com.github.charlemaznable.guardians.utils.RequestKeyedValueExtractType.Body;
+import static com.github.charlemaznable.guardians.utils.RequestValueExtractType.Body;
 import static com.google.common.base.Charsets.ISO_8859_1;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;

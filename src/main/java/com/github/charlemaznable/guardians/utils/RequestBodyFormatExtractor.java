@@ -23,7 +23,7 @@ import static java.net.URLDecoder.decode;
 
 @Getter
 @RequiredArgsConstructor
-public class RequestBodyFormatExtractor implements RequestKeyedValueExtractor {
+public class RequestBodyFormatExtractor implements RequestValueExtractor {
 
     @NonNull
     private String keyName;

@@ -10,7 +10,7 @@ import static com.github.charlemaznable.net.Http.fetchPathVariableMap;
 
 @Getter
 @AllArgsConstructor
-public class RequestPathVariableExtractor implements RequestKeyedValueExtractor {
+public class RequestPathVariableExtractor implements RequestValueExtractor {
 
     private String keyName;
 
