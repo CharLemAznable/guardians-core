@@ -10,7 +10,6 @@ import lombok.val;
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Function;
 
 import static com.github.charlemaznable.codec.Json.unJson;
 import static com.github.charlemaznable.codec.Xml.unXml;
@@ -24,7 +23,7 @@ import static java.net.URLDecoder.decode;
 
 @Getter
 @RequiredArgsConstructor
-public class RequestBodyFormatExtractor implements Function<HttpServletRequest, Map<String, Object>>, RequestKeyedValueExtractor {
+public class RequestBodyFormatExtractor implements RequestKeyedValueExtractor {
 
     @NonNull
     private String keyName;
@@ -38,13 +37,9 @@ public class RequestBodyFormatExtractor implements Function<HttpServletRequest, 
     }
 
     @Override
-    public Map<String, Object> apply(HttpServletRequest request) {
-        return parser.parse(dealRequestBodyStream(request, charsetName), charsetName);
-    }
-
-    @Override
-    public String extract(HttpServletRequest request) {
-        return getStr(apply(request), keyName);
+    public String apply(HttpServletRequest request) {
+        val requestBody = dealRequestBodyStream(request, charsetName);
+        return getStr(parser.parse(requestBody, charsetName), keyName);
     }
 
     public enum RequestBodyParser {

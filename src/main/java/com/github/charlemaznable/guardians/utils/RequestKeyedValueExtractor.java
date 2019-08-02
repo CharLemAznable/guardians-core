@@ -1,10 +1,6 @@
 package com.github.charlemaznable.guardians.utils;
 
-import javax.servlet.http.HttpServletRequest;
-
-public interface RequestKeyedValueExtractor {
+public interface RequestKeyedValueExtractor extends RequestValueExtractor {
 
     String getKeyName();
-
-    String extract(HttpServletRequest request);
 }

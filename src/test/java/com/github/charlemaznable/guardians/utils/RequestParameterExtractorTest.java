@@ -17,10 +17,10 @@ public class RequestParameterExtractorTest {
 
         val extractor1 = Parameter.extractor("key");
         assertEquals("key", extractor1.getKeyName());
-        assertEquals("value", extractor1.extract(request));
+        assertEquals("value", extractor1.apply(request));
 
         val extractor2 = Parameter.extractor("none");
         assertEquals("none", extractor2.getKeyName());
-        assertNull(extractor2.extract(request));
+        assertNull(extractor2.apply(request));
     }
 }

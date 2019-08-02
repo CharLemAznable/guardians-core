@@ -19,10 +19,10 @@ public class RequestPathVariableExtractorTest {
 
         val extractor1 = Path.extractor("key");
         assertEquals("key", extractor1.getKeyName());
-        assertEquals("value", extractor1.extract(request));
+        assertEquals("value", extractor1.apply(request));
 
         val extractor2 = Path.extractor("none");
         assertEquals("none", extractor2.getKeyName());
-        assertNull(extractor2.extract(request));
+        assertNull(extractor2.apply(request));
     }
 }
