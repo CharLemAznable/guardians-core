@@ -15,11 +15,11 @@ public class RequestHeaderExtractorTest {
         val request = new MockHttpServletRequest();
         request.addHeader("key", "value");
 
-        val extractor1 = (RequestHeaderExtractor) Header.extractor("key");
+        val extractor1 = (RequestHeaderExtractFunction) Header.function("key");
         assertEquals("key", extractor1.getKeyName());
         assertEquals("value", extractor1.apply(request));
 
-        val extractor2 = (RequestHeaderExtractor) Header.extractor("none");
+        val extractor2 = (RequestHeaderExtractFunction) Header.function("none");
         assertEquals("none", extractor2.getKeyName());
         assertNull(extractor2.apply(request));
     }

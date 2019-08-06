@@ -15,11 +15,11 @@ public class RequestParameterExtractorTest {
         val request = new MockHttpServletRequest();
         request.setParameter("key", "value");
 
-        val extractor1 = (RequestParameterExtractor) Parameter.extractor("key");
+        val extractor1 = (RequestParameterExtractFunction) Parameter.function("key");
         assertEquals("key", extractor1.getKeyName());
         assertEquals("value", extractor1.apply(request));
 
-        val extractor2 = (RequestParameterExtractor) Parameter.extractor("none");
+        val extractor2 = (RequestParameterExtractFunction) Parameter.function("none");
         assertEquals("none", extractor2.getKeyName());
         assertNull(extractor2.apply(request));
     }

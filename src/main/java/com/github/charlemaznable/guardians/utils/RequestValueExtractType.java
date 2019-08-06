@@ -1,6 +1,6 @@
 package com.github.charlemaznable.guardians.utils;
 
-import com.github.charlemaznable.guardians.utils.RequestBodyFormatExtractor.RequestBodyParser;
+import com.github.charlemaznable.guardians.utils.RequestBodyFormatExtractFunction.RequestBodyFormat;
 
 import static com.github.charlemaznable.lang.Condition.nullThen;
 import static com.google.common.base.Charsets.UTF_8;
@@ -9,51 +9,51 @@ public enum RequestValueExtractType {
 
     Parameter {
         @Override
-        public RequestValueExtractor extractor(
-                String keyName, RequestBodyParser parser, String charsetName) {
-            return new RequestParameterExtractor(keyName);
+        public RequestValueExtractFunction function(
+                String keyName, RequestBodyFormat parser, String charsetName) {
+            return new RequestParameterExtractFunction(keyName);
         }
     },
     Path {
         @Override
-        public RequestValueExtractor extractor(
-                String keyName, RequestBodyParser parser, String charsetName) {
-            return new RequestPathVariableExtractor(keyName);
+        public RequestValueExtractFunction function(
+                String keyName, RequestBodyFormat parser, String charsetName) {
+            return new RequestPathVariableExtractFunction(keyName);
         }
     },
     Header {
         @Override
-        public RequestValueExtractor extractor(
-                String keyName, RequestBodyParser parser, String charsetName) {
-            return new RequestHeaderExtractor(keyName);
+        public RequestValueExtractFunction function(
+                String keyName, RequestBodyFormat parser, String charsetName) {
+            return new RequestHeaderExtractFunction(keyName);
         }
     },
     Cookie {
         @Override
-        public RequestValueExtractor extractor(
-                String keyName, RequestBodyParser parser, String charsetName) {
-            return new RequestCookieExtractor(keyName);
+        public RequestValueExtractFunction function(
+                String keyName, RequestBodyFormat parser, String charsetName) {
+            return new RequestCookieExtractFunction(keyName);
         }
     },
     Body {
         @Override
-        public RequestValueExtractor extractor(
-                String keyName, RequestBodyParser parser, String charsetName) {
-            return new RequestBodyFormatExtractor(keyName, parser, charsetName);
+        public RequestValueExtractFunction function(
+                String keyName, RequestBodyFormat parser, String charsetName) {
+            return new RequestBodyFormatExtractFunction(keyName, parser, charsetName);
         }
     },
     BodyRaw {
         @Override
-        public RequestValueExtractor extractor(
-                String keyName, RequestBodyParser parser, String charsetName) {
-            return new RequestBodyRawExtractor(nullThen(charsetName, UTF_8::name));
+        public RequestValueExtractFunction function(
+                String keyName, RequestBodyFormat parser, String charsetName) {
+            return new RequestBodyRawExtractFunction(nullThen(charsetName, UTF_8::name));
         }
     };
 
-    public RequestValueExtractor extractor(String keyName) {
-        return extractor(keyName, null, null);
+    public RequestValueExtractFunction function(String keyName) {
+        return function(keyName, null, null);
     }
 
-    public abstract RequestValueExtractor extractor(
-            String keyName, RequestBodyParser parser, String charsetName);
+    public abstract RequestValueExtractFunction function(
+            String keyName, RequestBodyFormat parser, String charsetName);
 }

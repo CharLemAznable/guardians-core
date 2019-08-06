@@ -17,11 +17,11 @@ public class RequestCookieExtractorTest {
         val request = new MockHttpServletRequest();
         request.setCookies(mockCookie);
 
-        val extractor1 = (RequestCookieExtractor) Cookie.extractor("key");
+        val extractor1 = (RequestCookieExtractFunction) Cookie.function("key");
         assertEquals("key", extractor1.getKeyName());
         assertEquals("value", extractor1.apply(request));
 
-        val extractor2 = (RequestCookieExtractor) Cookie.extractor("none");
+        val extractor2 = (RequestCookieExtractFunction) Cookie.function("none");
         assertEquals("none", extractor2.getKeyName());
         assertNull(extractor2.apply(request));
     }

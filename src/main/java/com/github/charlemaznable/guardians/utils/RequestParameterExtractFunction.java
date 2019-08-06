@@ -5,16 +5,14 @@ import lombok.Getter;
 
 import javax.servlet.http.HttpServletRequest;
 
-import static com.github.charlemaznable.net.Http.dealRequestBodyStream;
-
 @Getter
 @AllArgsConstructor
-public class RequestBodyRawExtractor implements RequestValueExtractor {
+public class RequestParameterExtractFunction implements RequestValueExtractFunction {
 
-    private String charsetName;
+    private String keyName;
 
     @Override
     public String apply(HttpServletRequest request) {
-        return dealRequestBodyStream(request, charsetName);
+        return request.getParameter(keyName);
     }
 }

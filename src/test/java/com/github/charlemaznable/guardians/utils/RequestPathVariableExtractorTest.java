@@ -17,11 +17,11 @@ public class RequestPathVariableExtractorTest {
         val request = new MockHttpServletRequest();
         request.setAttribute(URI_TEMPLATE_VARIABLES_ATTRIBUTE, map("key", "value"));
 
-        val extractor1 = (RequestPathVariableExtractor) Path.extractor("key");
+        val extractor1 = (RequestPathVariableExtractFunction) Path.function("key");
         assertEquals("key", extractor1.getKeyName());
         assertEquals("value", extractor1.apply(request));
 
-        val extractor2 = (RequestPathVariableExtractor) Path.extractor("none");
+        val extractor2 = (RequestPathVariableExtractFunction) Path.function("none");
         assertEquals("none", extractor2.getKeyName());
         assertNull(extractor2.apply(request));
     }
