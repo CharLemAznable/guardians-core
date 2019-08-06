@@ -29,7 +29,6 @@ import java.util.function.Function;
 import static com.github.charlemaznable.lang.Clz.invokeQuietly;
 import static com.github.charlemaznable.lang.Clz.isAssignable;
 import static com.github.charlemaznable.lang.Condition.checkNull;
-import static com.github.charlemaznable.lang.Condition.nullThen;
 import static com.github.charlemaznable.lang.Listt.newArrayList;
 import static com.github.charlemaznable.spring.MutableHttpServletUtils.mutableRequest;
 import static com.github.charlemaznable.spring.MutableHttpServletUtils.mutableResponse;
@@ -107,7 +106,7 @@ public class GuardiansInterceptor implements HandlerInterceptor {
                 continue;
             }
 
-            val contextTypes = nullThen(preGuardian.context(), () -> new Class<?>[0]);
+            val contextTypes = preGuardian.context();
             val guardMethods = guardianMethodListCache.get(guardianType,
                     () -> findGuardMethodList(guardianType));
             for (val guardMethod : guardMethods) {
@@ -151,7 +150,7 @@ public class GuardiansInterceptor implements HandlerInterceptor {
                 continue;
             }
 
-            val contextTypes = nullThen(postGuardian.context(), () -> new Class<?>[0]);
+            val contextTypes = postGuardian.context();
             val guardMethods = guardianMethodListCache.get(guardianType,
                     () -> findGuardMethodList(guardianType));
             for (val guardMethod : guardMethods) {
