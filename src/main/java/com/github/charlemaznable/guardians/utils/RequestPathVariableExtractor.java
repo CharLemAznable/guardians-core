@@ -10,12 +10,12 @@ import static com.github.charlemaznable.net.Http.fetchPathVariableMap;
 
 @Getter
 @AllArgsConstructor
-public class RequestPathVariableExtractFunction implements RequestValueExtractFunction {
+public class RequestPathVariableExtractor implements RequestValueExtractor {
 
     private String keyName;
 
     @Override
-    public String apply(HttpServletRequest request) {
+    public String extract(HttpServletRequest request) {
         return getStr(fetchPathVariableMap(request), keyName);
     }
 }

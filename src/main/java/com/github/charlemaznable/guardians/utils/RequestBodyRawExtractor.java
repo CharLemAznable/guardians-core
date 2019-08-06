@@ -9,12 +9,12 @@ import static com.github.charlemaznable.net.Http.dealRequestBodyStream;
 
 @Getter
 @AllArgsConstructor
-public class RequestBodyRawExtractFunction implements RequestValueExtractFunction {
+public class RequestBodyRawExtractor implements RequestValueExtractor {
 
     private String charsetName;
 
     @Override
-    public String apply(HttpServletRequest request) {
+    public String extract(HttpServletRequest request) {
         return dealRequestBodyStream(request, charsetName);
     }
 }

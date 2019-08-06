@@ -7,12 +7,12 @@ import javax.servlet.http.HttpServletRequest;
 
 @Getter
 @AllArgsConstructor
-public class RequestParameterExtractFunction implements RequestValueExtractFunction {
+public class RequestParameterExtractor implements RequestValueExtractor {
 
     private String keyName;
 
     @Override
-    public String apply(HttpServletRequest request) {
+    public String extract(HttpServletRequest request) {
         return request.getParameter(keyName);
     }
 }

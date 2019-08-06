@@ -13,7 +13,7 @@ import java.util.Map;
 
 import static com.github.charlemaznable.codec.Json.unJson;
 import static com.github.charlemaznable.codec.Xml.unXml;
-import static com.github.charlemaznable.guardians.utils.RequestBodyFormatExtractFunction.RequestBodyFormat.Form;
+import static com.github.charlemaznable.guardians.utils.RequestBodyFormatExtractor.RequestBodyFormat.Form;
 import static com.github.charlemaznable.lang.Mapp.getStr;
 import static com.github.charlemaznable.lang.Mapp.newHashMap;
 import static com.github.charlemaznable.lang.Str.isNotBlank;
@@ -23,21 +23,21 @@ import static java.net.URLDecoder.decode;
 
 @Getter
 @RequiredArgsConstructor
-public class RequestBodyFormatExtractFunction implements RequestValueExtractFunction {
+public class RequestBodyFormatExtractor implements RequestValueExtractor {
 
     @NonNull
     private String keyName;
     private RequestBodyFormat format = Form;
     private String charsetName = UTF_8.name();
 
-    public RequestBodyFormatExtractFunction(String keyName, RequestBodyFormat format, String charsetName) {
+    public RequestBodyFormatExtractor(String keyName, RequestBodyFormat format, String charsetName) {
         this.keyName = keyName;
         if (null != format) this.format = format;
         if (isNotBlank(charsetName)) this.charsetName = charsetName;
     }
 
     @Override
-    public String apply(HttpServletRequest request) {
+    public String extract(HttpServletRequest request) {
         val requestBody = dealRequestBodyStream(request, charsetName);
         return getStr(format.parse(requestBody, charsetName), keyName);
     }
