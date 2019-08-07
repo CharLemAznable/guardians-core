@@ -54,11 +54,15 @@ public class GuardiansInterceptor implements HandlerInterceptor {
                              HttpServletResponse response,
                              Object handler) {
         try {
-            GuardianContext.setup(request, response);
+            val mutableRequest = mutableRequest(request);
+            val mutableResponse = mutableResponse(response);
+            GuardianContext.setup(mutableRequest, mutableResponse, handler);
+
             return preHandleInternal(request, response, handler);
         } catch (GuardianReturnFalse | GuardianException ex) {
             val e = ex instanceof GuardianReturnFalse ? null : ex;
             afterCompletionInternal(request, response, handler, e);
+
             GuardianContext.teardown();
             return false;
         } catch (Exception ex) {
@@ -111,8 +115,7 @@ public class GuardiansInterceptor implements HandlerInterceptor {
                     () -> findGuardMethodList(guardianType));
             for (val guardMethod : guardMethods) {
                 if (Boolean.TYPE != guardMethod.getReturnType()) continue;
-                val parameters = buildGuardParameters(guardMethod,
-                        mutableRequest, mutableResponse, contextTypes, cacheKey, null);
+                val parameters = buildGuardParameters(guardMethod, contextTypes, null);
                 val result = invokeQuietly(guardian, guardMethod, parameters);
                 if (!(result instanceof Boolean) || !(Boolean) result) {
                     throw new GuardianReturnFalse();
@@ -155,8 +158,7 @@ public class GuardiansInterceptor implements HandlerInterceptor {
                     () -> findGuardMethodList(guardianType));
             for (val guardMethod : guardMethods) {
                 if (Void.TYPE != guardMethod.getReturnType()) continue;
-                val parameters = buildGuardParameters(guardMethod,
-                        mutableRequest, mutableResponse, contextTypes, cacheKey, ex);
+                val parameters = buildGuardParameters(guardMethod, contextTypes, ex);
                 invokeQuietly(guardian, guardMethod, parameters);
             }
         }
@@ -206,10 +208,7 @@ public class GuardiansInterceptor implements HandlerInterceptor {
 
     @SuppressWarnings("unchecked")
     private Object[] buildGuardParameters(Method guardMethod,
-                                          HttpServletRequest request,
-                                          HttpServletResponse response,
                                           Class<?>[] contextTypes,
-                                          HandlerGuardiansCacheKey cacheKey,
                                           Exception exception) {
 
         val parameterTypes = guardMethod.getParameterTypes();
@@ -217,14 +216,11 @@ public class GuardiansInterceptor implements HandlerInterceptor {
         for (int i = 0; i < parameterTypes.length; i++) {
             val parameterType = parameterTypes[i];
             if (isAssignable(parameterType, HttpServletRequest.class)) {
-                parameters[i] = request;
+                parameters[i] = GuardianContext.request();
             } else if (isAssignable(parameterType, HttpServletResponse.class)) {
-                parameters[i] = response;
+                parameters[i] = GuardianContext.response();
             } else if (isAssignable(parameterType, Annotation.class)) {
-                val annotationType = (Class<Annotation>) parameterType;
-                parameters[i] = findMergedAnnotation(cacheKey.getMethod(), annotationType);
-                if (null != parameters[i]) continue;
-                parameters[i] = findMergedAnnotation(cacheKey.getDeclaringClass(), annotationType);
+                parameters[i] = GuardianContext.handlerAnnotation((Class<Annotation>) parameterType);
             } else if (isAssignable(parameterType, Exception.class)) {
                 if (null == exception) continue;
                 parameters[i] = isAssignable(exception.getClass(), parameterType) ? exception : null;

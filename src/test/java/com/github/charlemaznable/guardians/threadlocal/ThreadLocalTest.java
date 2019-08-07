@@ -55,6 +55,8 @@ public class ThreadLocalTest {
         val responseMap = unJson(responseContent);
         assertEquals("PreAlphaGuardian", responseMap.get("prefix"));
         assertEquals("PreAlphaGuardian", responseMap.get("context"));
+        assertEquals("alpha", responseMap.get("method"));
+        assertEquals("ThreadLocalController", responseMap.get("class"));
     }
 
     @SneakyThrows
@@ -67,6 +69,8 @@ public class ThreadLocalTest {
         val responseMap = unJson(responseContent);
         assertNull(responseMap.get("prefix"));
         assertEquals("PreBetaGuardian", responseMap.get("context"));
+        assertEquals("beta", responseMap.get("method"));
+        assertEquals("ThreadLocalController", responseMap.get("class"));
     }
 
     @Test
