@@ -6,7 +6,7 @@
 
     <groupId>com.github.charlemaznable</groupId>
     <artifactId>guardians-core</artifactId>
-    <version>0.1.0</version>
+    <version>0.1.1</version>
     <packaging>jar</packaging>
 
     <name>Guardians Core</name>
@@ -51,13 +51,13 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.8</java.version>
 
-        <complex-kits.version>0.6.4</complex-kits.version>
+        <complex-kits.version>0.7.0</complex-kits.version>
 
         <lombok.version>1.18.8</lombok.version>
         <javax.servlet-api.version>4.0.1</javax.servlet-api.version>
-        <spring.version>5.1.8.RELEASE</spring.version>
+        <spring.version>5.1.9.RELEASE</spring.version>
 
-        <junit-jupiter-engine.version>5.5.0</junit-jupiter-engine.version>
+        <junit-jupiter-engine.version>5.5.1</junit-jupiter-engine.version>
 
         <maven-resources-plugin.version>3.1.0</maven-resources-plugin.version>
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
