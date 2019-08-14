@@ -3,9 +3,7 @@ package com.github.charlemaznable.guardians.spring;
 import com.github.charlemaznable.guardians.Guard;
 import com.github.charlemaznable.guardians.NoneGuardian;
 import com.github.charlemaznable.guardians.PostGuardian;
-import com.github.charlemaznable.guardians.PostGuardians;
 import com.github.charlemaznable.guardians.PreGuardian;
-import com.github.charlemaznable.guardians.PreGuardians;
 import com.github.charlemaznable.guardians.exception.GuardianException;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
@@ -24,7 +22,6 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Function;
 
 import static com.github.charlemaznable.lang.Clz.invokeQuietly;
 import static com.github.charlemaznable.lang.Clz.isAssignable;
@@ -35,6 +32,7 @@ import static com.github.charlemaznable.spring.MutableHttpServletUtils.mutableRe
 import static com.github.charlemaznable.spring.SpringContext.getBean;
 import static org.apache.commons.lang3.reflect.MethodUtils.getMethodsListWithAnnotation;
 import static org.springframework.core.annotation.AnnotatedElementUtils.findMergedAnnotation;
+import static org.springframework.core.annotation.AnnotatedElementUtils.findMergedRepeatableAnnotations;
 
 @Slf4j
 @Component
@@ -96,8 +94,7 @@ public class GuardiansInterceptor implements HandlerInterceptor {
         if (noneGuardian.isPresent()) return true;
 
         val preGuardians = preGuardiansAnnotationCache.get(cacheKey,
-                () -> findGuardians(cacheKey, PreGuardian.class,
-                        PreGuardians.class, PreGuardians::value));
+                () -> findGuardians(cacheKey, PreGuardian.class));
         if (preGuardians.size() == 0) return true;
 
         val mutableRequest = mutableRequest(request);
@@ -139,8 +136,7 @@ public class GuardiansInterceptor implements HandlerInterceptor {
         if (noneGuardian.isPresent()) return;
 
         val postGuardians = postGuardiansAnnotationCache.get(cacheKey,
-                () -> findGuardians(cacheKey, PostGuardian.class,
-                        PostGuardians.class, PostGuardians::value));
+                () -> findGuardians(cacheKey, PostGuardian.class));
         if (postGuardians.size() == 0) return;
 
         val mutableRequest = mutableRequest(request);
@@ -174,21 +170,15 @@ public class GuardiansInterceptor implements HandlerInterceptor {
         return Optional.empty();
     }
 
-    private <Guardian extends Annotation, Guardians extends Annotation>
-    List<Guardian> findGuardians(HandlerGuardiansCacheKey cacheKey,
-                                 Class<Guardian> guardianType,
-                                 Class<Guardians> guardiansType,
-                                 Function<Guardians, Guardian[]> fetcher) {
+    @SuppressWarnings("unchecked")
+    private <Guardian extends Annotation> List<Guardian> findGuardians(HandlerGuardiansCacheKey cacheKey,
+                                                                       Class<Guardian> guardianType) {
 
-        val methodGuardians = findMergedAnnotation(cacheKey.getMethod(), guardiansType);
-        if (null != methodGuardians) return newArrayList(fetcher.apply(methodGuardians));
-        val methodGuardian = findMergedAnnotation(cacheKey.getMethod(), guardianType);
-        if (null != methodGuardian) return newArrayList(methodGuardian);
+        val methodGuardians = findMergedRepeatableAnnotations(cacheKey.getMethod(), guardianType);
+        if (!methodGuardians.isEmpty()) return newArrayList(methodGuardians);
 
-        val classGuardians = findMergedAnnotation(cacheKey.getDeclaringClass(), guardiansType);
-        if (null != classGuardians) return newArrayList(fetcher.apply(classGuardians));
-        val classGuardian = findMergedAnnotation(cacheKey.getDeclaringClass(), guardianType);
-        if (null != classGuardian) return newArrayList(classGuardian);
+        val classGuardians = findMergedRepeatableAnnotations(cacheKey.getDeclaringClass(), guardianType);
+        if (!classGuardians.isEmpty()) return newArrayList(classGuardians);
 
         return newArrayList();
     }
