@@ -1,10 +1,10 @@
 package com.github.charlemaznable.guardians.utils;
 
+import com.github.charlemaznable.guardians.exception.GuardianException;
 import com.google.common.base.Splitter;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import lombok.val;
 
 import javax.servlet.http.HttpServletRequest;
@@ -45,34 +45,45 @@ public class RequestBodyFormatExtractor implements RequestValueExtractor {
     public enum RequestBodyFormat {
 
         Form {
-            @SneakyThrows
             @Override
             public Map<String, Object> parse(String requestBody, String charsetName) {
-                val result = new HashMap<String, Object>();
-                Iterable<String> pairs = Splitter.on("&").split(requestBody);
-                for (val pair : pairs) {
-                    int idx = pair.indexOf('=');
-                    if (idx == -1) {
-                        result.put(decode(pair, charsetName), null);
-                    } else {
-                        String name = decode(pair.substring(0, idx), charsetName);
-                        String value = decode(pair.substring(idx + 1), charsetName);
-                        result.put(name, value);
+                try {
+                    val result = new HashMap<String, Object>();
+                    Iterable<String> pairs = Splitter.on("&").split(requestBody);
+                    for (val pair : pairs) {
+                        int idx = pair.indexOf('=');
+                        if (idx == -1) {
+                            result.put(decode(pair, charsetName), null);
+                        } else {
+                            String name = decode(pair.substring(0, idx), charsetName);
+                            String value = decode(pair.substring(idx + 1), charsetName);
+                            result.put(name, value);
+                        }
                     }
+                    return result;
+                } catch (Exception e) {
+                    throw new GuardianException(e);
                 }
-                return result;
             }
         },
         Json {
             @Override
             public Map<String, Object> parse(String requestBody, String charsetName) {
-                return newHashMap(unJson(requestBody));
+                try {
+                    return newHashMap(unJson(requestBody));
+                } catch (Exception e) {
+                    throw new GuardianException(e);
+                }
             }
         },
         Xml {
             @Override
             public Map<String, Object> parse(String requestBody, String charsetName) {
-                return newHashMap(unXml(requestBody));
+                try {
+                    return newHashMap(unXml(requestBody));
+                } catch (Exception e) {
+                    throw new GuardianException(e);
+                }
             }
         };
 
