@@ -1,5 +1,6 @@
 package com.github.charlemaznable.guardians.utils;
 
+import com.github.charlemaznable.guardians.exception.GuardianException;
 import com.github.charlemaznable.spring.MutableHttpServletRequest;
 import lombok.val;
 import org.junit.jupiter.api.Test;
@@ -14,6 +15,7 @@ import static com.github.charlemaznable.guardians.utils.RequestValueExtractorTyp
 import static com.google.common.base.Charsets.ISO_8859_1;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class RequestBodyFormatExtractorTest {
 
@@ -75,6 +77,8 @@ public class RequestBodyFormatExtractorTest {
         assertEquals("ISO-8859-1", formatExtractor4.getCharsetName());
         assertEquals("key4", formatExtractor4.getKeyName());
         assertNull(formatExtractor4.extract(request));
+
+        assertThrows(GuardianException.class, () -> Json.parse("\"key1\":\"value1\"", "UTF-8"));
     }
 
     @Test
@@ -106,5 +110,7 @@ public class RequestBodyFormatExtractorTest {
         assertEquals("UTF-8", formatExtractor4.getCharsetName());
         assertEquals("key4", formatExtractor4.getKeyName());
         assertNull(formatExtractor4.extract(request));
+
+        assertThrows(GuardianException.class, () -> Xml.parse("\"key1\":\"value1\"", "UTF-8"));
     }
 }
