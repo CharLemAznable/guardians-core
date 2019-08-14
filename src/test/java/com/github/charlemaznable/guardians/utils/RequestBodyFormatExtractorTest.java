@@ -47,6 +47,8 @@ public class RequestBodyFormatExtractorTest {
         assertEquals("UTF-8", formatExtractor4.getCharsetName());
         assertEquals("key4", formatExtractor4.getKeyName());
         assertNull(formatExtractor4.extract(request));
+
+        assertThrows(GuardianException.class, () -> Form.parse("key2=表单", ""));
     }
 
     @Test
