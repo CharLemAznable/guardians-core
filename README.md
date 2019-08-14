@@ -13,6 +13,6 @@ Guardians核心.
 <dependency>
   <groupId>com.github.charlemaznable</groupId>
   <artifactId>guardians-core</artifactId>
-  <version>0.1.1</version>
+  <version>0.1.2</version>
 </dependency>
 ```
