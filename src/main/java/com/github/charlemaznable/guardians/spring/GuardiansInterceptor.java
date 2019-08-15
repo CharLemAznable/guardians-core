@@ -20,19 +20,22 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
 import java.util.List;
 import java.util.Optional;
 
 import static com.github.charlemaznable.lang.Clz.invokeQuietly;
 import static com.github.charlemaznable.lang.Clz.isAssignable;
+import static com.github.charlemaznable.lang.Condition.checkNotNull;
 import static com.github.charlemaznable.lang.Condition.checkNull;
 import static com.github.charlemaznable.lang.Listt.newArrayList;
+import static com.github.charlemaznable.spring.AnnotationElf.resolveContainerAnnotationType;
 import static com.github.charlemaznable.spring.MutableHttpServletUtils.mutableRequest;
 import static com.github.charlemaznable.spring.MutableHttpServletUtils.mutableResponse;
 import static com.github.charlemaznable.spring.SpringContext.getBean;
 import static org.apache.commons.lang3.reflect.MethodUtils.getMethodsListWithAnnotation;
 import static org.springframework.core.annotation.AnnotatedElementUtils.findMergedAnnotation;
-import static org.springframework.core.annotation.AnnotatedElementUtils.findMergedRepeatableAnnotations;
+import static org.springframework.core.annotation.AnnotationUtils.getValue;
 
 @Slf4j
 @Component
@@ -173,12 +176,17 @@ public class GuardiansInterceptor implements HandlerInterceptor {
     @SuppressWarnings("unchecked")
     private <Guardian extends Annotation> List<Guardian> findGuardians(HandlerGuardiansCacheKey cacheKey,
                                                                        Class<Guardian> guardianType) {
+        val guardiansType = checkNotNull(resolveContainerAnnotationType(guardianType));
 
-        val methodGuardians = findMergedRepeatableAnnotations(cacheKey.getMethod(), guardianType);
-        if (!methodGuardians.isEmpty()) return newArrayList(methodGuardians);
+        val methodGuardians = findMergedAnnotation(cacheKey.getMethod(), guardiansType);
+        if (null != methodGuardians) return newArrayList((Guardian[]) getValue(methodGuardians));
+        val methodGuardian = findMergedAnnotation(cacheKey.getMethod(), guardianType);
+        if (null != methodGuardian) return newArrayList(methodGuardian);
 
-        val classGuardians = findMergedRepeatableAnnotations(cacheKey.getDeclaringClass(), guardianType);
-        if (!classGuardians.isEmpty()) return newArrayList(classGuardians);
+        val classGuardians = findMergedAnnotation(cacheKey.getDeclaringClass(), guardiansType);
+        if (null != classGuardians) return newArrayList((Guardian[]) getValue(classGuardians));
+        val classGuardian = findMergedAnnotation(cacheKey.getDeclaringClass(), guardianType);
+        if (null != classGuardian) return newArrayList(classGuardian);
 
         return newArrayList();
     }
@@ -211,6 +219,12 @@ public class GuardiansInterceptor implements HandlerInterceptor {
                 parameters[i] = GuardianContext.response();
             } else if (isAssignable(parameterType, Annotation.class)) {
                 parameters[i] = GuardianContext.handlerAnnotation((Class<Annotation>) parameterType);
+            } else if (isAssignable(parameterType, List.class)) {
+                val genericType = guardMethod.getGenericParameterTypes()[i];
+                val componentType = (Class) ((ParameterizedType) genericType).getActualTypeArguments()[0];
+                if (isAssignable(componentType, Annotation.class)) {
+                    parameters[i] = GuardianContext.handlerAnnotations((Class<Annotation>) componentType);
+                }
             } else if (isAssignable(parameterType, Exception.class)) {
                 if (null == exception) continue;
                 parameters[i] = isAssignable(exception.getClass(), parameterType) ? exception : null;

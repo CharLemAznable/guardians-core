@@ -8,11 +8,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.util.List;
 import java.util.Map;
 
 import static com.github.charlemaznable.lang.Condition.notNullThen;
+import static com.github.charlemaznable.lang.Listt.newArrayList;
 import static com.github.charlemaznable.lang.Mapp.newHashMap;
+import static com.github.charlemaznable.spring.AnnotationElf.resolveContainerAnnotationType;
 import static org.springframework.core.annotation.AnnotatedElementUtils.findMergedAnnotation;
+import static org.springframework.core.annotation.AnnotationUtils.getValue;
 
 @UtilityClass
 public class GuardianContext {
@@ -61,15 +65,40 @@ public class GuardianContext {
     }
 
     public <A extends Annotation> A handlerAnnotation(Class<A> annotationType) {
+        val handlerAnnotations = handlerAnnotations(annotationType);
+        if (handlerAnnotations.isEmpty()) return null;
+        return handlerAnnotations.get(0);
+    }
+
+    @SuppressWarnings("unchecked")
+    public <A extends Annotation> List<A> handlerAnnotations(Class<A> annotationType) {
         val handler = handler();
-        if (!(handler instanceof HandlerMethod)) return null;
+        if (!(handler instanceof HandlerMethod)) return newArrayList();
         val methodHandler = (HandlerMethod) handler;
         val handlerMethod = methodHandler.getMethod();
         val handlerDeclaringClass = handlerMethod.getDeclaringClass();
 
-        val annotation = findMergedAnnotation(handlerMethod, annotationType);
-        if (null != annotation) return annotation;
-        return findMergedAnnotation(handlerDeclaringClass, annotationType);
+        val containerType = resolveContainerAnnotationType(annotationType);
+        if (null == containerType) {
+            val annotation = findMergedAnnotation(
+                    handlerMethod, annotationType);
+            if (null != annotation) return newArrayList(annotation);
+            return newArrayList(findMergedAnnotation(
+                    handlerDeclaringClass, annotationType));
+
+        } else {
+            val methodContainer = findMergedAnnotation(handlerMethod, containerType);
+            if (null != methodContainer) return newArrayList((A[]) getValue(methodContainer));
+            val methodAnnotation = findMergedAnnotation(handlerMethod, annotationType);
+            if (null != methodAnnotation) return newArrayList(methodAnnotation);
+
+            val classContainer = findMergedAnnotation(handlerDeclaringClass, containerType);
+            if (null != classContainer) return newArrayList((A[]) getValue(classContainer));
+            val classAnnotation = findMergedAnnotation(handlerDeclaringClass, annotationType);
+            if (null != classAnnotation) return newArrayList(classAnnotation);
+
+            return newArrayList();
+        }
     }
 
     public Map<String, Object> all() {

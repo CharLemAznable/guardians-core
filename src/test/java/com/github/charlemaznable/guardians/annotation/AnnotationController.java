@@ -20,25 +20,36 @@ public class AnnotationController {
         responseJson(response, json(fetchParameterMap(request)));
     }
 
+    @GuardianRepeatableAnnotation("z")
     @GuardianParamAnnotation("ALPHA")
     @RequestMapping("/alpha")
     public void alpha(HttpServletRequest request, HttpServletResponse response) {
         responseJson(response, json(fetchParameterMap(request)));
     }
 
+    @GuardianRepeatableAnnotation("z")
+    @GuardianRepeatableAnnotation("y")
+    @GuardianRepeatableAnnotation("x")
     @GuardianParamAnnotation("BETA")
     @RequestMapping("/beta")
     public void beta(HttpServletRequest request, HttpServletResponse response) {
         responseJson(response, json(fetchParameterMap(request)));
     }
 
-    @GuardianAnnotation("GAMMA")
+    @GuardianAnnotation(value = "GAMMA",
+            repeat = @GuardianRepeatableAnnotation("z")
+    )
     @RequestMapping("/gamma")
     public void gamma(HttpServletRequest request, HttpServletResponse response) {
         responseJson(response, json(fetchParameterMap(request)));
     }
 
-    @GuardianAnnotation("DELTA")
+    @GuardianAnnotation(value = "DELTA",
+            repeat = {
+                    @GuardianRepeatableAnnotation("z"),
+                    @GuardianRepeatableAnnotation("y"),
+                    @GuardianRepeatableAnnotation("x"),
+            })
     @RequestMapping("/delta")
     public void delta(HttpServletRequest request, HttpServletResponse response) {
         responseJson(response, json(fetchParameterMap(request)));

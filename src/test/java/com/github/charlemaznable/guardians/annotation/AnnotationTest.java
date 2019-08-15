@@ -49,6 +49,8 @@ public class AnnotationTest {
         val responseContent = response.getContentAsString();
         val responseMap = unJson(responseContent);
         assertEquals("DEFAULT", responseMap.get("prefix"));
+        assertEquals("Empty", responseMap.get("first"));
+        assertEquals("Empty", responseMap.get("list"));
         assertEquals("DEFAULT", responseMap.get("suffix"));
     }
 
@@ -61,6 +63,8 @@ public class AnnotationTest {
         val responseContent = response.getContentAsString();
         val responseMap = unJson(responseContent);
         assertEquals("ALPHA", responseMap.get("prefix"));
+        assertEquals("z", responseMap.get("first"));
+        assertEquals("z", responseMap.get("list"));
         assertEquals("ALPHA", responseMap.get("suffix"));
     }
 
@@ -73,6 +77,8 @@ public class AnnotationTest {
         val responseContent = response.getContentAsString();
         val responseMap = unJson(responseContent);
         assertEquals("BETA", responseMap.get("prefix"));
+        assertEquals("z", responseMap.get("first"));
+        assertEquals("zyx", responseMap.get("list"));
         assertEquals("BETA", responseMap.get("suffix"));
     }
 
@@ -85,6 +91,8 @@ public class AnnotationTest {
         val responseContent = response.getContentAsString();
         val responseMap = unJson(responseContent);
         assertEquals("GAMMA", responseMap.get("prefix"));
+        assertEquals("z", responseMap.get("first"));
+        assertEquals("z", responseMap.get("list"));
         assertEquals("GAMMA", responseMap.get("suffix"));
     }
 
@@ -97,6 +105,8 @@ public class AnnotationTest {
         val responseContent = response.getContentAsString();
         val responseMap = unJson(responseContent);
         assertEquals("DELTA", responseMap.get("prefix"));
+        assertEquals("z", responseMap.get("first"));
+        assertEquals("zyx", responseMap.get("list"));
         assertEquals("DELTA", responseMap.get("suffix"));
     }
 
@@ -109,6 +119,8 @@ public class AnnotationTest {
         val responseContent = response.getContentAsString();
         val responseMap = unJson(responseContent);
         assertEquals("Empty", responseMap.get("prefix"));
+        assertEquals("Empty", responseMap.get("first"));
+        assertEquals("Empty", responseMap.get("list"));
         assertEquals("Empty", responseMap.get("suffix"));
     }
 }
