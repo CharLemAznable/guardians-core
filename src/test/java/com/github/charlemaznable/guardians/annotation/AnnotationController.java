@@ -12,7 +12,7 @@ import static com.github.charlemaznable.net.Http.responseJson;
 
 @Controller
 @RequestMapping("/annotation")
-@GuardianAnnotation
+@GuardianAnnotation(repeat = @GuardianRepeatableAnnotation)
 public class AnnotationController {
 
     @RequestMapping("/default")

@@ -49,8 +49,8 @@ public class AnnotationTest {
         val responseContent = response.getContentAsString();
         val responseMap = unJson(responseContent);
         assertEquals("DEFAULT", responseMap.get("prefix"));
-        assertEquals("Empty", responseMap.get("first"));
-        assertEquals("Empty", responseMap.get("list"));
+        assertEquals("DEFAULT", responseMap.get("first"));
+        assertEquals("DEFAULT", responseMap.get("list"));
         assertEquals("DEFAULT", responseMap.get("suffix"));
     }
 
