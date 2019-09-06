@@ -6,7 +6,7 @@
 
     <groupId>com.github.charlemaznable</groupId>
     <artifactId>guardians-core</artifactId>
-    <version>0.2.2</version>
+    <version>0.2.3</version>
     <packaging>jar</packaging>
 
     <name>Guardians Core</name>
@@ -51,7 +51,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.8</java.version>
 
-        <complex-kits.version>0.8.0</complex-kits.version>
+        <complex-kits.version>0.8.1</complex-kits.version>
 
         <lombok.version>1.18.8</lombok.version>
         <javax.servlet-api.version>4.0.1</javax.servlet-api.version>

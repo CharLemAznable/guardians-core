@@ -1,9 +1,9 @@
 package com.github.charlemaznable.guardians.context;
 
-import com.github.charlemaznable.guardians.Guard;
 import com.github.charlemaznable.core.spring.MutableHttpServletRequest;
 import com.github.charlemaznable.core.spring.MutableHttpServletResponse;
 import com.github.charlemaznable.core.spring.MutableHttpServletUtils;
+import com.github.charlemaznable.guardians.Guard;
 import lombok.val;
 import org.springframework.stereotype.Component;
 

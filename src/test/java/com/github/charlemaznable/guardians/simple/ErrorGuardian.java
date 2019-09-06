@@ -1,9 +1,9 @@
 package com.github.charlemaznable.guardians.simple;
 
-import com.github.charlemaznable.guardians.Guard;
 import com.github.charlemaznable.core.spring.MutableHttpServletRequest;
 import com.github.charlemaznable.core.spring.MutableHttpServletResponse;
 import com.github.charlemaznable.core.spring.MutableHttpServletUtils;
+import com.github.charlemaznable.guardians.Guard;
 import lombok.val;
 
 import static com.github.charlemaznable.core.codec.Json.json;

@@ -1,7 +1,7 @@
 package com.github.charlemaznable.guardians.threadlocal;
 
-import com.github.charlemaznable.guardians.spring.GuardianContext;
 import com.github.charlemaznable.core.spring.MutableHttpServletFilter;
+import com.github.charlemaznable.guardians.spring.GuardianContext;
 import lombok.SneakyThrows;
 import lombok.val;
 import org.joor.ReflectException;
