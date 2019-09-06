@@ -1,6 +1,6 @@
 package com.github.charlemaznable.guardians.exception;
 
-import com.github.charlemaznable.spring.MutableHttpServletFilter;
+import com.github.charlemaznable.core.spring.MutableHttpServletFilter;
 import lombok.SneakyThrows;
 import lombok.val;
 import org.junit.jupiter.api.BeforeAll;

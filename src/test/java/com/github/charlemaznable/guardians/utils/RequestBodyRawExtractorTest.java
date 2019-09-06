@@ -4,8 +4,8 @@ import lombok.val;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 
-import static com.github.charlemaznable.codec.Bytes.bytes;
-import static com.github.charlemaznable.codec.Bytes.string;
+import static com.github.charlemaznable.core.codec.Bytes.bytes;
+import static com.github.charlemaznable.core.codec.Bytes.string;
 import static com.github.charlemaznable.guardians.utils.RequestValueExtractorType.BodyRaw;
 import static com.google.common.base.Charsets.ISO_8859_1;
 import static org.junit.jupiter.api.Assertions.assertEquals;

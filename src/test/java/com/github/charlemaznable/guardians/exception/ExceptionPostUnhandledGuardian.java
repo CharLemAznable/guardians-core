@@ -5,8 +5,8 @@ import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletResponse;
 
-import static com.github.charlemaznable.lang.Condition.checkNull;
-import static com.github.charlemaznable.net.Http.responseText;
+import static com.github.charlemaznable.core.lang.Condition.checkNull;
+import static com.github.charlemaznable.core.net.Http.responseText;
 
 @Component
 public class ExceptionPostUnhandledGuardian {

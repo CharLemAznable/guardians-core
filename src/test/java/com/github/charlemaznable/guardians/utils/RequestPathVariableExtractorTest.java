@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 
 import static com.github.charlemaznable.guardians.utils.RequestValueExtractorType.Path;
-import static com.github.charlemaznable.lang.Mapp.map;
+import static com.github.charlemaznable.core.lang.Mapp.map;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.springframework.web.servlet.HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE;

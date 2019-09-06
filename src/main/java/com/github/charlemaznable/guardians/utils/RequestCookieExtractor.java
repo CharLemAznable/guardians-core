@@ -7,7 +7,7 @@ import lombok.val;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
-import static com.github.charlemaznable.lang.Condition.nullThen;
+import static com.github.charlemaznable.core.lang.Condition.nullThen;
 
 @Getter
 @AllArgsConstructor

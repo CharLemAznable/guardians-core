@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import static com.github.charlemaznable.net.Http.responseText;
+import static com.github.charlemaznable.core.net.Http.responseText;
 
 @Controller
 @RequestMapping("/exception")

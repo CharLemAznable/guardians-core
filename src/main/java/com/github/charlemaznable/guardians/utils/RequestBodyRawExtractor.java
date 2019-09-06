@@ -5,7 +5,7 @@ import lombok.Getter;
 
 import javax.servlet.http.HttpServletRequest;
 
-import static com.github.charlemaznable.net.Http.dealRequestBodyStream;
+import static com.github.charlemaznable.core.net.Http.dealRequestBodyStream;
 
 @Getter
 @AllArgsConstructor

@@ -5,8 +5,8 @@ import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletResponse;
 
-import static com.github.charlemaznable.codec.Json.jsonOf;
-import static com.github.charlemaznable.net.Http.responseJson;
+import static com.github.charlemaznable.core.codec.Json.jsonOf;
+import static com.github.charlemaznable.core.net.Http.responseJson;
 
 @Component
 public class FalseGuardian {

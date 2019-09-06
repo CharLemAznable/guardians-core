@@ -1,7 +1,7 @@
 package com.github.charlemaznable.guardians.inherited;
 
 import com.github.charlemaznable.guardians.Guard;
-import com.github.charlemaznable.spring.MutableHttpServletRequest;
+import com.github.charlemaznable.core.spring.MutableHttpServletRequest;
 import org.springframework.stereotype.Component;
 
 @Component

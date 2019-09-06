@@ -2,7 +2,7 @@ package com.github.charlemaznable.guardians.utils;
 
 import com.github.charlemaznable.guardians.utils.RequestBodyFormatExtractor.RequestBodyFormat;
 
-import static com.github.charlemaznable.lang.Condition.nullThen;
+import static com.github.charlemaznable.core.lang.Condition.nullThen;
 import static com.google.common.base.Charsets.UTF_8;
 
 public enum RequestValueExtractorType {

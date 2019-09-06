@@ -5,8 +5,8 @@ import lombok.Getter;
 
 import javax.servlet.http.HttpServletRequest;
 
-import static com.github.charlemaznable.lang.Mapp.getStr;
-import static com.github.charlemaznable.net.Http.fetchPathVariableMap;
+import static com.github.charlemaznable.core.lang.Mapp.getStr;
+import static com.github.charlemaznable.core.net.Http.fetchPathVariableMap;
 
 @Getter
 @AllArgsConstructor

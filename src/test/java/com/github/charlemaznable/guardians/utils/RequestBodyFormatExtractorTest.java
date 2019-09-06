@@ -1,13 +1,13 @@
 package com.github.charlemaznable.guardians.utils;
 
 import com.github.charlemaznable.guardians.exception.GuardianException;
-import com.github.charlemaznable.spring.MutableHttpServletRequest;
+import com.github.charlemaznable.core.spring.MutableHttpServletRequest;
 import lombok.val;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 
-import static com.github.charlemaznable.codec.Bytes.bytes;
-import static com.github.charlemaznable.codec.Bytes.string;
+import static com.github.charlemaznable.core.codec.Bytes.bytes;
+import static com.github.charlemaznable.core.codec.Bytes.string;
 import static com.github.charlemaznable.guardians.utils.RequestBodyFormatExtractor.RequestBodyFormat.Form;
 import static com.github.charlemaznable.guardians.utils.RequestBodyFormatExtractor.RequestBodyFormat.Json;
 import static com.github.charlemaznable.guardians.utils.RequestBodyFormatExtractor.RequestBodyFormat.Xml;

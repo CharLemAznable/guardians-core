@@ -11,13 +11,13 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.github.charlemaznable.codec.Json.unJson;
-import static com.github.charlemaznable.codec.Xml.unXml;
+import static com.github.charlemaznable.core.codec.Json.unJson;
+import static com.github.charlemaznable.core.codec.Xml.unXml;
 import static com.github.charlemaznable.guardians.utils.RequestBodyFormatExtractor.RequestBodyFormat.Form;
-import static com.github.charlemaznable.lang.Mapp.getStr;
-import static com.github.charlemaznable.lang.Mapp.newHashMap;
-import static com.github.charlemaznable.lang.Str.isNotBlank;
-import static com.github.charlemaznable.net.Http.dealRequestBodyStream;
+import static com.github.charlemaznable.core.lang.Mapp.getStr;
+import static com.github.charlemaznable.core.lang.Mapp.newHashMap;
+import static com.github.charlemaznable.core.lang.Str.isNotBlank;
+import static com.github.charlemaznable.core.net.Http.dealRequestBodyStream;
 import static com.google.common.base.Charsets.UTF_8;
 import static java.net.URLDecoder.decode;
 
