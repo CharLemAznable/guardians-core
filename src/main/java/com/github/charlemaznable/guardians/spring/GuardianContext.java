@@ -1,6 +1,5 @@
 package com.github.charlemaznable.guardians.spring;
 
-import lombok.experimental.UtilityClass;
 import lombok.val;
 import org.springframework.web.method.HandlerMethod;
 
@@ -18,60 +17,59 @@ import static com.github.charlemaznable.core.spring.AnnotationElf.resolveContain
 import static org.springframework.core.annotation.AnnotatedElementUtils.findMergedAnnotation;
 import static org.springframework.core.annotation.AnnotationUtils.getValue;
 
-@UtilityClass
 public class GuardianContext {
 
-    private ThreadLocal<HttpServletRequest> requestContext = new ThreadLocal<>();
-    private ThreadLocal<HttpServletResponse> responseContext = new ThreadLocal<>();
-    private ThreadLocal<Object> handlerContext = new ThreadLocal<>();
-    private ThreadLocal<Map<String, Object>> customContext = new ThreadLocal<>();
+    private static ThreadLocal<HttpServletRequest> requestContext = new ThreadLocal<>();
+    private static ThreadLocal<HttpServletResponse> responseContext = new ThreadLocal<>();
+    private static ThreadLocal<Object> handlerContext = new ThreadLocal<>();
+    private static ThreadLocal<Map<String, Object>> customContext = new ThreadLocal<>();
 
-    public void setup(HttpServletRequest request, HttpServletResponse response, Object handler) {
+    public static void setup(HttpServletRequest request, HttpServletResponse response, Object handler) {
         requestContext.set(request);
         responseContext.set(response);
         handlerContext.set(handler);
         customContext.set(newHashMap());
     }
 
-    public void teardown() {
+    public static void teardown() {
         requestContext.set(null);
         responseContext.set(null);
         handlerContext.set(null);
         customContext.set(null);
     }
 
-    public HttpServletRequest request() {
+    public static HttpServletRequest request() {
         return requestContext.get();
     }
 
-    public HttpServletResponse response() {
+    public static HttpServletResponse response() {
         return responseContext.get();
     }
 
-    public Object handler() {
+    public static Object handler() {
         return handlerContext.get();
     }
 
-    public Method handlerMethod() {
+    public static Method handlerMethod() {
         val handler = handler();
         return handler instanceof HandlerMethod ?
                 ((HandlerMethod) handler).getMethod() : null;
     }
 
-    public Class<?> handlerDeclaringClass() {
+    public static Class<?> handlerDeclaringClass() {
         val handlerMethod = handlerMethod();
         return null != handlerMethod ?
                 handlerMethod.getDeclaringClass() : null;
     }
 
-    public <A extends Annotation> A handlerAnnotation(Class<A> annotationType) {
+    public static <A extends Annotation> A handlerAnnotation(Class<A> annotationType) {
         val handlerAnnotations = handlerAnnotations(annotationType);
         if (handlerAnnotations.isEmpty()) return null;
         return handlerAnnotations.get(0);
     }
 
     @SuppressWarnings("unchecked")
-    public <A extends Annotation> List<A> handlerAnnotations(Class<A> annotationType) {
+    public static <A extends Annotation> List<A> handlerAnnotations(Class<A> annotationType) {
         val handler = handler();
         if (!(handler instanceof HandlerMethod)) return newArrayList();
         val methodHandler = (HandlerMethod) handler;
@@ -101,15 +99,15 @@ public class GuardianContext {
         }
     }
 
-    public Map<String, Object> all() {
+    public static Map<String, Object> all() {
         return customContext.get();
     }
 
-    public Object get(String key) {
+    public static Object get(String key) {
         return notNullThen(customContext.get(), m -> m.get(key));
     }
 
-    public void set(String key, Object value) {
+    public static void set(String key, Object value) {
         notNullThen(customContext.get(), m -> m.put(key, value));
     }
 }

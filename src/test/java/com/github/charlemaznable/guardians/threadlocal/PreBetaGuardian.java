@@ -1,18 +1,19 @@
 package com.github.charlemaznable.guardians.threadlocal;
 
-import com.github.charlemaznable.core.spring.MutableHttpServletUtils;
 import com.github.charlemaznable.guardians.Guard;
-import com.github.charlemaznable.guardians.spring.GuardianContext;
 import org.springframework.stereotype.Component;
+
+import static com.github.charlemaznable.core.spring.MutableHttpServletUtils.setRequestParameter;
+import static com.github.charlemaznable.guardians.spring.GuardianContext.request;
+import static com.github.charlemaznable.guardians.spring.GuardianContext.set;
 
 @Component
 public class PreBetaGuardian {
 
     @Guard
     public boolean guard() {
-        MutableHttpServletUtils.setRequestParameter(
-                GuardianContext.request(), "prefix", "PreBetaGuardian");
-        GuardianContext.set("context", "PreBetaGuardian");
+        setRequestParameter(request(), "prefix", "PreBetaGuardian");
+        set("context", "PreBetaGuardian");
         return false;
     }
 }

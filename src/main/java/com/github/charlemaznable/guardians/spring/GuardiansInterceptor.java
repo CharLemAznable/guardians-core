@@ -33,6 +33,12 @@ import static com.github.charlemaznable.core.spring.AnnotationElf.resolveContain
 import static com.github.charlemaznable.core.spring.MutableHttpServletUtils.mutableRequest;
 import static com.github.charlemaznable.core.spring.MutableHttpServletUtils.mutableResponse;
 import static com.github.charlemaznable.core.spring.SpringContext.getBean;
+import static com.github.charlemaznable.guardians.spring.GuardianContext.handlerAnnotation;
+import static com.github.charlemaznable.guardians.spring.GuardianContext.handlerAnnotations;
+import static com.github.charlemaznable.guardians.spring.GuardianContext.request;
+import static com.github.charlemaznable.guardians.spring.GuardianContext.response;
+import static com.github.charlemaznable.guardians.spring.GuardianContext.setup;
+import static com.github.charlemaznable.guardians.spring.GuardianContext.teardown;
 import static org.apache.commons.lang3.reflect.MethodUtils.getMethodsListWithAnnotation;
 import static org.springframework.core.annotation.AnnotatedElementUtils.findMergedAnnotation;
 import static org.springframework.core.annotation.AnnotationUtils.getValue;
@@ -57,17 +63,17 @@ public class GuardiansInterceptor implements HandlerInterceptor {
         try {
             val mutableRequest = mutableRequest(request);
             val mutableResponse = mutableResponse(response);
-            GuardianContext.setup(mutableRequest, mutableResponse, handler);
+            setup(mutableRequest, mutableResponse, handler);
 
             return preHandleInternal(request, response, handler);
         } catch (GuardianReturnFalse | GuardianException ex) {
             val e = ex instanceof GuardianReturnFalse ? null : ex;
             afterCompletionInternal(request, response, handler, e);
 
-            GuardianContext.teardown();
+            teardown();
             return false;
         } catch (Exception ex) {
-            GuardianContext.teardown();
+            teardown();
             throw ex;
         }
     }
@@ -79,7 +85,7 @@ public class GuardiansInterceptor implements HandlerInterceptor {
         try {
             afterCompletionInternal(request, response, handler, ex);
         } finally {
-            GuardianContext.teardown();
+            teardown();
         }
     }
 
@@ -214,16 +220,16 @@ public class GuardiansInterceptor implements HandlerInterceptor {
         for (int i = 0; i < parameterTypes.length; i++) {
             val parameterType = parameterTypes[i];
             if (isAssignable(parameterType, HttpServletRequest.class)) {
-                parameters[i] = GuardianContext.request();
+                parameters[i] = request();
             } else if (isAssignable(parameterType, HttpServletResponse.class)) {
-                parameters[i] = GuardianContext.response();
+                parameters[i] = response();
             } else if (isAssignable(parameterType, Annotation.class)) {
-                parameters[i] = GuardianContext.handlerAnnotation((Class<Annotation>) parameterType);
+                parameters[i] = handlerAnnotation((Class<Annotation>) parameterType);
             } else if (isAssignable(parameterType, List.class)) {
                 val genericType = guardMethod.getGenericParameterTypes()[i];
                 val componentType = (Class) ((ParameterizedType) genericType).getActualTypeArguments()[0];
                 if (isAssignable(componentType, Annotation.class)) {
-                    parameters[i] = GuardianContext.handlerAnnotations((Class<Annotation>) componentType);
+                    parameters[i] = handlerAnnotations((Class<Annotation>) componentType);
                 }
             } else if (isAssignable(parameterType, Exception.class)) {
                 if (null == exception) continue;

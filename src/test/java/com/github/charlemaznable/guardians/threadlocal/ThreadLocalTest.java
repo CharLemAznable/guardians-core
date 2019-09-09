@@ -4,7 +4,6 @@ import com.github.charlemaznable.core.spring.MutableHttpServletFilter;
 import com.github.charlemaznable.guardians.spring.GuardianContext;
 import lombok.SneakyThrows;
 import lombok.val;
-import org.joor.ReflectException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -18,10 +17,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
 
 import static com.github.charlemaznable.core.codec.Json.unJson;
-import static org.joor.Reflect.onClass;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
@@ -75,7 +72,6 @@ public class ThreadLocalTest {
 
     @Test
     public void testCoverage() {
-        assertThrows(ReflectException.class,
-                () -> onClass(GuardianContext.class).create().get());
+        new GuardianContext();
     }
 }
