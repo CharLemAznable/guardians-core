@@ -26,10 +26,8 @@ import java.util.Optional;
 
 import static com.github.charlemaznable.core.lang.Clz.invokeQuietly;
 import static com.github.charlemaznable.core.lang.Clz.isAssignable;
-import static com.github.charlemaznable.core.lang.Condition.checkNotNull;
 import static com.github.charlemaznable.core.lang.Condition.checkNull;
 import static com.github.charlemaznable.core.lang.Listt.newArrayList;
-import static com.github.charlemaznable.core.spring.AnnotationElf.resolveContainerAnnotationType;
 import static com.github.charlemaznable.core.spring.MutableHttpServletUtils.mutableRequest;
 import static com.github.charlemaznable.core.spring.MutableHttpServletUtils.mutableResponse;
 import static com.github.charlemaznable.core.spring.SpringContext.getBean;
@@ -41,7 +39,7 @@ import static com.github.charlemaznable.guardians.spring.GuardianContext.setup;
 import static com.github.charlemaznable.guardians.spring.GuardianContext.teardown;
 import static org.apache.commons.lang3.reflect.MethodUtils.getMethodsListWithAnnotation;
 import static org.springframework.core.annotation.AnnotatedElementUtils.findMergedAnnotation;
-import static org.springframework.core.annotation.AnnotationUtils.getValue;
+import static org.springframework.core.annotation.AnnotatedElementUtils.findMergedRepeatableAnnotations;
 
 @Slf4j
 @Component
@@ -182,15 +180,13 @@ public class GuardiansInterceptor implements HandlerInterceptor {
     @SuppressWarnings("unchecked")
     private <Guardian extends Annotation> List<Guardian> findGuardians(HandlerGuardiansCacheKey cacheKey,
                                                                        Class<Guardian> guardianType) {
-        val guardiansType = checkNotNull(resolveContainerAnnotationType(guardianType));
-
-        val methodGuardians = findMergedAnnotation(cacheKey.getMethod(), guardiansType);
-        if (null != methodGuardians) return newArrayList((Guardian[]) getValue(methodGuardians));
+        val methodGuardians = findMergedRepeatableAnnotations(cacheKey.getMethod(), guardianType);
+        if (!methodGuardians.isEmpty()) return newArrayList(methodGuardians);
         val methodGuardian = findMergedAnnotation(cacheKey.getMethod(), guardianType);
         if (null != methodGuardian) return newArrayList(methodGuardian);
 
-        val classGuardians = findMergedAnnotation(cacheKey.getDeclaringClass(), guardiansType);
-        if (null != classGuardians) return newArrayList((Guardian[]) getValue(classGuardians));
+        val classGuardians = findMergedRepeatableAnnotations(cacheKey.getDeclaringClass(), guardianType);
+        if (!classGuardians.isEmpty()) return newArrayList(classGuardians);
         val classGuardian = findMergedAnnotation(cacheKey.getDeclaringClass(), guardianType);
         if (null != classGuardian) return newArrayList(classGuardian);
 
