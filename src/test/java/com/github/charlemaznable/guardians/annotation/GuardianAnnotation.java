@@ -16,8 +16,12 @@ import java.lang.annotation.Target;
 @PreGuardian(AnnotationGuardian.class)
 @PostGuardian(AnnotationGuardian.class)
 @GuardianParamAnnotation
+@GuardianRepeatableAnnotations
 public @interface GuardianAnnotation {
 
     @AliasFor(annotation = GuardianParamAnnotation.class, attribute = "value")
     String value() default "DEFAULT";
+
+    @AliasFor(annotation = GuardianRepeatableAnnotations.class, attribute = "value")
+    GuardianRepeatableAnnotation[] repeat() default {};
 }
