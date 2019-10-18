@@ -11,7 +11,7 @@
     </parent>
 
     <artifactId>guardians-core</artifactId>
-    <version>0.4.2</version>
+    <version>0.4.3</version>
     <packaging>jar</packaging>
 
     <name>Guardians Core</name>
