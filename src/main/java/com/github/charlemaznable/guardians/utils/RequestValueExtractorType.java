@@ -3,46 +3,46 @@ package com.github.charlemaznable.guardians.utils;
 import com.github.charlemaznable.guardians.utils.RequestBodyFormatExtractor.RequestBodyFormat;
 
 import static com.github.charlemaznable.core.lang.Condition.nullThen;
-import static com.google.common.base.Charsets.UTF_8;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 public enum RequestValueExtractorType {
 
-    Parameter {
+    PARAMETER {
         @Override
         public RequestValueExtractor extractor(
                 String keyName, RequestBodyFormat parser, String charsetName) {
             return new RequestParameterExtractor(keyName);
         }
     },
-    Path {
+    PATH {
         @Override
         public RequestValueExtractor extractor(
                 String keyName, RequestBodyFormat parser, String charsetName) {
             return new RequestPathVariableExtractor(keyName);
         }
     },
-    Header {
+    HEADER {
         @Override
         public RequestValueExtractor extractor(
                 String keyName, RequestBodyFormat parser, String charsetName) {
             return new RequestHeaderExtractor(keyName);
         }
     },
-    Cookie {
+    COOKIE {
         @Override
         public RequestValueExtractor extractor(
                 String keyName, RequestBodyFormat parser, String charsetName) {
             return new RequestCookieExtractor(keyName);
         }
     },
-    Body {
+    BODY {
         @Override
         public RequestValueExtractor extractor(
                 String keyName, RequestBodyFormat parser, String charsetName) {
             return new RequestBodyFormatExtractor(keyName, parser, charsetName);
         }
     },
-    BodyRaw {
+    BODY_RAW {
         @Override
         public RequestValueExtractor extractor(
                 String keyName, RequestBodyFormat parser, String charsetName) {

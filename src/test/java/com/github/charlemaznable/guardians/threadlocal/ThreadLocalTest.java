@@ -1,7 +1,6 @@
 package com.github.charlemaznable.guardians.threadlocal;
 
 import com.github.charlemaznable.core.spring.MutableHttpServletFilter;
-import com.github.charlemaznable.guardians.spring.GuardianContext;
 import lombok.SneakyThrows;
 import lombok.val;
 import org.junit.jupiter.api.BeforeAll;
@@ -68,10 +67,5 @@ public class ThreadLocalTest {
         assertEquals("PreBetaGuardian", responseMap.get("context"));
         assertEquals("beta", responseMap.get("method"));
         assertEquals("ThreadLocalController", responseMap.get("class"));
-    }
-
-    @Test
-    public void testCoverage() {
-        new GuardianContext();
     }
 }

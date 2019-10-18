@@ -24,6 +24,8 @@ public class GuardianContext {
     private static ThreadLocal<Object> handlerContext = new ThreadLocal<>();
     private static ThreadLocal<Map<String, Object>> customContext = new ThreadLocal<>();
 
+    private GuardianContext() {}
+
     public static void setup(HttpServletRequest request, HttpServletResponse response, Object handler) {
         requestContext.set(request);
         responseContext.set(response);
@@ -32,10 +34,10 @@ public class GuardianContext {
     }
 
     public static void teardown() {
-        requestContext.set(null);
-        responseContext.set(null);
-        handlerContext.set(null);
-        customContext.set(null);
+        requestContext.remove();
+        responseContext.remove();
+        handlerContext.remove();
+        customContext.remove();
     }
 
     public static HttpServletRequest request() {
@@ -72,7 +74,7 @@ public class GuardianContext {
     public static <A extends Annotation> List<A> handlerAnnotations(Class<A> annotationType) {
         val handler = handler();
         if (!(handler instanceof HandlerMethod)) return newArrayList();
-        val methodHandler = (HandlerMethod) handler;
+        HandlerMethod methodHandler = (HandlerMethod) handler;
         val handlerMethod = methodHandler.getMethod();
         val handlerDeclaringClass = handlerMethod.getDeclaringClass();
 

@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
+import javax.annotation.Nonnull;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.lang.annotation.Annotation;
@@ -57,19 +58,22 @@ public class GuardiansInterceptor implements HandlerInterceptor {
             guardianMethodListCache = CacheBuilder.newBuilder().build();
 
     @Override
-    public boolean preHandle(HttpServletRequest request,
-                             HttpServletResponse response,
-                             Object handler) {
+    public boolean preHandle(@Nonnull HttpServletRequest request,
+                             @Nonnull HttpServletResponse response,
+                             @Nonnull Object handler) {
         try {
             val mutableRequest = mutableRequest(request);
             val mutableResponse = mutableResponse(response);
             setup(mutableRequest, mutableResponse, handler);
 
-            return preHandleInternal(request, response, handler);
-        } catch (GuardianReturnFalse | GuardianException ex) {
-            val e = ex instanceof GuardianReturnFalse ? null : ex;
+            preHandleInternal(request, response, handler);
+            return true;
+        } catch (GuardianReturnFalse e) {
+            afterCompletionInternal(request, response, handler, null);
+            teardown();
+            return false;
+        } catch (GuardianException e) {
             afterCompletionInternal(request, response, handler, e);
-
             teardown();
             return false;
         } catch (Exception ex) {
@@ -79,9 +83,9 @@ public class GuardiansInterceptor implements HandlerInterceptor {
     }
 
     @Override
-    public void afterCompletion(HttpServletRequest request,
-                                HttpServletResponse response,
-                                Object handler, Exception ex) {
+    public void afterCompletion(@Nonnull HttpServletRequest request,
+                                @Nonnull HttpServletResponse response,
+                                @Nonnull Object handler, Exception ex) {
         try {
             afterCompletionInternal(request, response, handler, ex);
         } finally {
@@ -90,24 +94,22 @@ public class GuardiansInterceptor implements HandlerInterceptor {
     }
 
     @SneakyThrows
-    public boolean preHandleInternal(HttpServletRequest request,
-                                     HttpServletResponse response,
-                                     Object handler) {
+    public void preHandleInternal(HttpServletRequest request,
+                                  HttpServletResponse response,
+                                  Object handler) {
 
-        if (!(handler instanceof HandlerMethod)) return true;
+        if (!(handler instanceof HandlerMethod)) return;
         val handlerMethod = (HandlerMethod) handler;
         val cacheKey = new HandlerGuardiansCacheKey(handlerMethod);
 
         val noneGuardian = noneGuardianAnnotationCache.get(cacheKey,
                 () -> findNoneGuardian(cacheKey));
-        if (noneGuardian.isPresent()) return true;
+        if (noneGuardian.isPresent()) return;
 
         val preGuardians = preGuardiansAnnotationCache.get(cacheKey,
                 () -> findGuardians(cacheKey, PreGuardian.class));
-        if (preGuardians.size() == 0) return true;
+        if (preGuardians.size() == 0) return;
 
-        val mutableRequest = mutableRequest(request);
-        val mutableResponse = mutableResponse(response);
         for (val preGuardian : preGuardians) {
             val guardianType = preGuardian.value();
             val guardian = getBean(guardianType);
@@ -123,12 +125,11 @@ public class GuardiansInterceptor implements HandlerInterceptor {
                 if (Boolean.TYPE != guardMethod.getReturnType()) continue;
                 val parameters = buildGuardParameters(guardMethod, contextTypes, null);
                 val result = invokeQuietly(guardian, guardMethod, parameters);
-                if (!(result instanceof Boolean) || !(Boolean) result) {
+                if (!(result instanceof Boolean) || !(boolean) result) {
                     throw new GuardianReturnFalse();
                 }
             }
         }
-        return true;
     }
 
     @SneakyThrows
@@ -148,8 +149,6 @@ public class GuardiansInterceptor implements HandlerInterceptor {
                 () -> findGuardians(cacheKey, PostGuardian.class));
         if (postGuardians.size() == 0) return;
 
-        val mutableRequest = mutableRequest(request);
-        val mutableResponse = mutableResponse(response);
         for (val postGuardian : postGuardians) {
             val guardianType = postGuardian.value();
             val guardian = getBean(guardianType);
@@ -180,17 +179,17 @@ public class GuardiansInterceptor implements HandlerInterceptor {
     }
 
     @SuppressWarnings("unchecked")
-    private <Guardian extends Annotation> List<Guardian> findGuardians(HandlerGuardiansCacheKey cacheKey,
-                                                                       Class<Guardian> guardianType) {
+    private <G extends Annotation> List<G> findGuardians(HandlerGuardiansCacheKey cacheKey,
+                                                         Class<G> guardianType) {
         val guardiansType = checkNotNull(resolveContainerAnnotationType(guardianType));
 
         val methodGuardians = findMergedAnnotation(cacheKey.getMethod(), guardiansType);
-        if (null != methodGuardians) return newArrayList((Guardian[]) getValue(methodGuardians));
+        if (null != methodGuardians) return newArrayList((G[]) getValue(methodGuardians));
         val methodGuardian = findMergedAnnotation(cacheKey.getMethod(), guardianType);
         if (null != methodGuardian) return newArrayList(methodGuardian);
 
         val classGuardians = findMergedAnnotation(cacheKey.getDeclaringClass(), guardiansType);
-        if (null != classGuardians) return newArrayList((Guardian[]) getValue(classGuardians));
+        if (null != classGuardians) return newArrayList((G[]) getValue(classGuardians));
         val classGuardian = findMergedAnnotation(cacheKey.getDeclaringClass(), guardianType);
         if (null != classGuardian) return newArrayList(classGuardian);
 
@@ -232,22 +231,30 @@ public class GuardiansInterceptor implements HandlerInterceptor {
                     parameters[i] = handlerAnnotations((Class<Annotation>) componentType);
                 }
             } else if (isAssignable(parameterType, Exception.class)) {
-                if (null == exception) continue;
-                parameters[i] = isAssignable(exception.getClass(), parameterType) ? exception : null;
+                parameters[i] = buildParameterWithException(parameterType, exception);
             } else {
-                parameters[i] = null;
-                for (val contextType : contextTypes) {
-                    if (isAssignable(contextType, parameterType)) {
-                        parameters[i] = getBean(contextType);
-                        if (null == parameters[i]) {
-                            log.warn("Cannot find Guardian Context Bean of Type: {}", contextType);
-                        }
-                        break;
-                    }
-                }
+                parameters[i] = buildParameterWithContextTypes(parameterType, contextTypes);
             }
         }
         return parameters;
+    }
+
+    private Object buildParameterWithException(Class<?> parameterType, Exception exception) {
+        if (null == exception) return null;
+        return isAssignable(exception.getClass(), parameterType) ? exception : null;
+    }
+
+    private Object buildParameterWithContextTypes(Class<?> parameterType, Class<?>[] contextTypes) {
+        for (val contextType : contextTypes) {
+            if (isAssignable(contextType, parameterType)) {
+                val parameter = getBean(contextType);
+                if (null == parameter) {
+                    log.warn("Cannot find Guardian Context Bean of Type: {}", contextType);
+                }
+                return parameter;
+            }
+        }
+        return null;
     }
 
     @Getter

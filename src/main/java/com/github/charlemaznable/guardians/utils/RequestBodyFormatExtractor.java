@@ -15,15 +15,15 @@ import static com.github.charlemaznable.core.lang.Mapp.getStr;
 import static com.github.charlemaznable.core.lang.Mapp.newHashMap;
 import static com.github.charlemaznable.core.lang.Str.isNotBlank;
 import static com.github.charlemaznable.core.net.Http.dealRequestBodyStream;
-import static com.github.charlemaznable.guardians.utils.RequestBodyFormatExtractor.RequestBodyFormat.Form;
-import static com.google.common.base.Charsets.UTF_8;
+import static com.github.charlemaznable.guardians.utils.RequestBodyFormatExtractor.RequestBodyFormat.FORM;
 import static java.net.URLDecoder.decode;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 @Getter
 public class RequestBodyFormatExtractor implements RequestValueExtractor {
 
     private String keyName;
-    private RequestBodyFormat format = Form;
+    private RequestBodyFormat format = FORM;
     private String charsetName = UTF_8.name();
 
     public RequestBodyFormatExtractor(String keyName) {
@@ -44,7 +44,7 @@ public class RequestBodyFormatExtractor implements RequestValueExtractor {
 
     public enum RequestBodyFormat {
 
-        Form {
+        FORM {
             @Override
             public Map<String, Object> parse(String requestBody, String charsetName) {
                 try {
@@ -72,7 +72,7 @@ public class RequestBodyFormatExtractor implements RequestValueExtractor {
                 }
             }
         },
-        Json {
+        JSON {
             @Override
             public Map<String, Object> parse(String requestBody, String charsetName) {
                 try {
@@ -82,7 +82,7 @@ public class RequestBodyFormatExtractor implements RequestValueExtractor {
                 }
             }
         },
-        Xml {
+        XML {
             @Override
             public Map<String, Object> parse(String requestBody, String charsetName) {
                 try {
