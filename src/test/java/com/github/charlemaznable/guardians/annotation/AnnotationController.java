@@ -12,7 +12,8 @@ import static com.github.charlemaznable.core.net.Http.responseJson;
 
 @Controller
 @RequestMapping("/annotation")
-@GuardianAnnotation(repeat = @GuardianRepeatableAnnotation)
+@GuardianAnnotation
+@GuardianRepeatableAnnotation
 public class AnnotationController {
 
     @RequestMapping("/default")
@@ -36,20 +37,17 @@ public class AnnotationController {
         responseJson(response, json(fetchParameterMap(request)));
     }
 
-    @GuardianAnnotation(value = "GAMMA",
-            repeat = @GuardianRepeatableAnnotation("z")
-    )
+    @GuardianAnnotation(value = "GAMMA")
+    @GuardianRepeatableAnnotation("z")
     @RequestMapping("/gamma")
     public void gamma(HttpServletRequest request, HttpServletResponse response) {
         responseJson(response, json(fetchParameterMap(request)));
     }
 
-    @GuardianAnnotation(value = "DELTA",
-            repeat = {
-                    @GuardianRepeatableAnnotation("z"),
-                    @GuardianRepeatableAnnotation("y"),
-                    @GuardianRepeatableAnnotation("x"),
-            })
+    @GuardianAnnotation(value = "DELTA")
+    @GuardianRepeatableAnnotation("z")
+    @GuardianRepeatableAnnotation("y")
+    @GuardianRepeatableAnnotation("x")
     @RequestMapping("/delta")
     public void delta(HttpServletRequest request, HttpServletResponse response) {
         responseJson(response, json(fetchParameterMap(request)));
