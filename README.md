@@ -33,3 +33,13 @@ Guardians核心.
   <version>0.4.4</version>
 </dependency>
 ```
+
+##### Maven Dependency
+
+```xml
+<dependency>
+  <groupId>com.github.charlemaznable</groupId>
+  <artifactId>guardians-core</artifactId>
+  <version>0.5.0-SNAPSHOT</version>
+</dependency>
+```
