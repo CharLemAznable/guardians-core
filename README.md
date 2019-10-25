@@ -34,7 +34,7 @@ Guardians核心.
 </dependency>
 ```
 
-##### Maven Dependency
+##### Maven Dependency SNAPSHOT
 
 ```xml
 <dependency>
