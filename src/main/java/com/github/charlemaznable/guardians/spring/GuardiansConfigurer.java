@@ -15,8 +15,12 @@ import javax.annotation.Nonnull;
 @ComplexComponentScan
 public class GuardiansConfigurer implements WebMvcConfigurer {
 
+    private final GuardiansInterceptor guardiansInterceptor;
+
     @Autowired
-    private GuardiansInterceptor guardiansInterceptor;
+    public GuardiansConfigurer(GuardiansInterceptor guardiansInterceptor) {
+        this.guardiansInterceptor = guardiansInterceptor;
+    }
 
     @Override
     public void addInterceptors(@Nonnull InterceptorRegistry registry) {
