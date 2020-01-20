@@ -20,7 +20,7 @@ import static java.net.URLDecoder.decode;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 @Getter
-public class RequestBodyFormatExtractor implements RequestValueExtractor {
+public final class RequestBodyFormatExtractor implements RequestValueExtractor {
 
     private String keyName;
     private RequestBodyFormat format = FORM;

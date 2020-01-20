@@ -1,6 +1,6 @@
 package com.github.charlemaznable.guardians.exception;
 
-public class GuardianException extends RuntimeException {
+public final class GuardianException extends RuntimeException {
 
     private static final long serialVersionUID = -6438996019472050220L;
 

@@ -11,7 +11,7 @@ import static com.github.charlemaznable.core.lang.Condition.nullThen;
 
 @Getter
 @AllArgsConstructor
-public class RequestCookieExtractor implements RequestValueExtractor {
+public final class RequestCookieExtractor implements RequestValueExtractor {
 
     private String keyName;
 

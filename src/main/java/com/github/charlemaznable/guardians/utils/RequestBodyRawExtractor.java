@@ -9,7 +9,7 @@ import static com.github.charlemaznable.core.net.Http.dealRequestBodyStream;
 
 @Getter
 @AllArgsConstructor
-public class RequestBodyRawExtractor implements RequestValueExtractor {
+public final class RequestBodyRawExtractor implements RequestValueExtractor {
 
     private String charsetName;
 

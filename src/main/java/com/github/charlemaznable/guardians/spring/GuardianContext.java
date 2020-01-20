@@ -17,7 +17,7 @@ import static com.github.charlemaznable.core.spring.AnnotationElf.resolveContain
 import static org.springframework.core.annotation.AnnotatedElementUtils.findMergedAnnotation;
 import static org.springframework.core.annotation.AnnotationUtils.getValue;
 
-public class GuardianContext {
+public final class GuardianContext {
 
     private static ThreadLocal<HttpServletRequest> requestContext = new ThreadLocal<>();
     private static ThreadLocal<HttpServletResponse> responseContext = new ThreadLocal<>();

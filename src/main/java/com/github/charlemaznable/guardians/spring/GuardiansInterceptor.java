@@ -45,7 +45,7 @@ import static org.springframework.core.annotation.AnnotatedElementUtils.findMerg
 
 @Slf4j
 @Component
-public class GuardiansInterceptor implements HandlerInterceptor {
+public final class GuardiansInterceptor implements HandlerInterceptor {
 
     private Cache<HandlerGuardiansCacheKey, Optional<NoneGuardian>>
             noneGuardianAnnotationCache = CacheBuilder.newBuilder().build();
