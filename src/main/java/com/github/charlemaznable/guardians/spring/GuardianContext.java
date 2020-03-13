@@ -19,10 +19,10 @@ import static org.springframework.core.annotation.AnnotationUtils.getValue;
 
 public final class GuardianContext {
 
-    private static ThreadLocal<HttpServletRequest> requestContext = new ThreadLocal<>();
-    private static ThreadLocal<HttpServletResponse> responseContext = new ThreadLocal<>();
-    private static ThreadLocal<Object> handlerContext = new ThreadLocal<>();
-    private static ThreadLocal<Map<String, Object>> customContext = new ThreadLocal<>();
+    private static ThreadLocal<HttpServletRequest> requestContext = new InheritableThreadLocal<>();
+    private static ThreadLocal<HttpServletResponse> responseContext = new InheritableThreadLocal<>();
+    private static ThreadLocal<Object> handlerContext = new InheritableThreadLocal<>();
+    private static ThreadLocal<Map<String, Object>> customContext = new InheritableThreadLocal<>();
 
     private GuardianContext() {}
 
