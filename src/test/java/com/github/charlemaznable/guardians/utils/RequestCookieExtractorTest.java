@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockCookie;
 import org.springframework.mock.web.MockHttpServletRequest;
 
+import static com.github.charlemaznable.core.lang.Listt.newArrayList;
 import static com.github.charlemaznable.guardians.utils.RequestValueExtractorType.COOKIE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -19,10 +20,12 @@ public class RequestCookieExtractorTest {
 
         val extractor1 = (RequestCookieExtractor) COOKIE.extractor("key");
         assertEquals("key", extractor1.getKeyNames().get(0));
-        assertEquals("value", extractor1.extract(request).get("key"));
+        assertEquals("value", extractor1.extractValue(request));
 
         val extractor2 = (RequestCookieExtractor) COOKIE.extractor("none");
         assertEquals("none", extractor2.getKeyNames().get(0));
-        assertNull(extractor2.extract(request).get("none"));
+        assertNull(extractor2.extractValue(request));
+
+        assertNull(COOKIE.extractor(newArrayList("key", "none")).extractValue(request));
     }
 }

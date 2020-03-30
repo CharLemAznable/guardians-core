@@ -9,6 +9,7 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import static com.github.charlemaznable.core.codec.Bytes.bytes;
 import static com.github.charlemaznable.core.codec.Bytes.string;
 import static com.github.charlemaznable.core.lang.Listt.newArrayList;
+import static com.github.charlemaznable.core.lang.Str.toStr;
 import static com.github.charlemaznable.guardians.utils.RequestBodyFormat.FORM;
 import static com.github.charlemaznable.guardians.utils.RequestBodyFormat.JSON;
 import static com.github.charlemaznable.guardians.utils.RequestBodyFormat.XML;
@@ -29,27 +30,28 @@ public class RequestBodyFormatExtractorTest {
         assertEquals(FORM, formatExtractor1.getFormat());
         assertEquals("UTF-8", formatExtractor1.getCharsetName());
         assertEquals("key1", formatExtractor1.getKeyNames().get(0));
-        assertEquals("value1", formatExtractor1.extract(request).get("key1"));
+        assertEquals("value1", formatExtractor1.extractValue(request));
 
         val formatExtractor2 = (RequestBodyFormatExtractor) BODY.extractor("key2");
         assertEquals(FORM, formatExtractor2.getFormat());
         assertEquals("UTF-8", formatExtractor2.getCharsetName());
         assertEquals("key2", formatExtractor2.getKeyNames().get(0));
-        assertEquals("表单", formatExtractor2.extract(request).get("key2"));
+        assertEquals("表单", formatExtractor2.extractValue(request));
 
         val formatExtractor3 = (RequestBodyFormatExtractor) BODY.extractor("key3");
         assertEquals(FORM, formatExtractor3.getFormat());
         assertEquals("UTF-8", formatExtractor3.getCharsetName());
         assertEquals("key3", formatExtractor3.getKeyNames().get(0));
-        assertEquals("", formatExtractor3.extract(request).get("key3"));
+        assertEquals("", formatExtractor3.extractValue(request));
 
         val formatExtractor4 = (RequestBodyFormatExtractor) BODY.extractor("key4");
         assertEquals(FORM, formatExtractor4.getFormat());
         assertEquals("UTF-8", formatExtractor4.getCharsetName());
         assertEquals("key4", formatExtractor4.getKeyNames().get(0));
-        assertNull(formatExtractor4.extract(request).get("key4"));
+        assertNull(formatExtractor4.extractValue(request));
 
         assertThrows(GuardianException.class, () -> FORM.parse("key2=表单", ""));
+        assertNull(BODY.extractor(newArrayList("key1", "key2", "key3", "key4")).extractValue(request));
     }
 
     @Test
@@ -61,27 +63,28 @@ public class RequestBodyFormatExtractorTest {
         assertEquals(JSON, formatExtractor1.getFormat());
         assertEquals("ISO-8859-1", formatExtractor1.getCharsetName());
         assertEquals("key1", formatExtractor1.getKeyNames().get(0));
-        assertEquals("value1", formatExtractor1.extract(request).get("key1"));
+        assertEquals("value1", formatExtractor1.extractValue(request));
 
         val formatExtractor2 = (RequestBodyFormatExtractor) BODY.extractor("key2", JSON, "ISO-8859-1");
         assertEquals(JSON, formatExtractor2.getFormat());
         assertEquals("ISO-8859-1", formatExtractor2.getCharsetName());
         assertEquals("key2", formatExtractor2.getKeyNames().get(0));
-        assertEquals("表单", string(bytes(formatExtractor2.extract(request).get("key2").toString(), ISO_8859_1)));
+        assertEquals("表单", string(bytes(toStr(formatExtractor2.extractValue(request)), ISO_8859_1)));
 
         val formatExtractor3 = (RequestBodyFormatExtractor) BODY.extractor("key3", JSON, "ISO-8859-1");
         assertEquals(JSON, formatExtractor3.getFormat());
         assertEquals("ISO-8859-1", formatExtractor3.getCharsetName());
         assertEquals("key3", formatExtractor3.getKeyNames().get(0));
-        assertEquals("", formatExtractor3.extract(request).get("key3"));
+        assertEquals("", formatExtractor3.extractValue(request));
 
         val formatExtractor4 = (RequestBodyFormatExtractor) BODY.extractor("key4", JSON, "ISO-8859-1");
         assertEquals(JSON, formatExtractor4.getFormat());
         assertEquals("ISO-8859-1", formatExtractor4.getCharsetName());
         assertEquals("key4", formatExtractor4.getKeyNames().get(0));
-        assertNull(formatExtractor4.extract(request).get("key4"));
+        assertNull(formatExtractor4.extractValue(request));
 
         assertThrows(GuardianException.class, () -> JSON.parse("\"key1\":\"value1\"", "UTF-8"));
+        assertNull(BODY.extractor(newArrayList("key1", "key2", "key3", "key4"), JSON, "ISO-8859-1").extractValue(request));
     }
 
     @Test
@@ -94,26 +97,27 @@ public class RequestBodyFormatExtractorTest {
         assertEquals(XML, formatExtractor1.getFormat());
         assertEquals("UTF-8", formatExtractor1.getCharsetName());
         assertEquals("key1", formatExtractor1.getKeyNames().get(0));
-        assertEquals("value1", formatExtractor1.extract(request).get("key1"));
+        assertEquals("value1", formatExtractor1.extractValue(request));
 
         val formatExtractor2 = (RequestBodyFormatExtractor) BODY.extractor("key2", XML, "UTF-8");
         assertEquals(XML, formatExtractor2.getFormat());
         assertEquals("UTF-8", formatExtractor2.getCharsetName());
         assertEquals("key2", formatExtractor2.getKeyNames().get(0));
-        assertEquals("表单", formatExtractor2.extract(request).get("key2"));
+        assertEquals("表单", formatExtractor2.extractValue(request));
 
         val formatExtractor3 = (RequestBodyFormatExtractor) BODY.extractor("key3", XML, "UTF-8");
         assertEquals(XML, formatExtractor3.getFormat());
         assertEquals("UTF-8", formatExtractor3.getCharsetName());
         assertEquals("key3", formatExtractor3.getKeyNames().get(0));
-        assertEquals("", formatExtractor3.extract(request).get("key3"));
+        assertEquals("", formatExtractor3.extractValue(request));
 
         val formatExtractor4 = (RequestBodyFormatExtractor) BODY.extractor("key4", XML, "UTF-8");
         assertEquals(XML, formatExtractor4.getFormat());
         assertEquals("UTF-8", formatExtractor4.getCharsetName());
         assertEquals("key4", formatExtractor4.getKeyNames().get(0));
-        assertNull(formatExtractor4.extract(request).get("key4"));
+        assertNull(formatExtractor4.extractValue(request));
 
         assertThrows(GuardianException.class, () -> XML.parse("\"key1\":\"value1\"", "UTF-8"));
+        assertNull(BODY.extractor(newArrayList("key1", "key2", "key3", "key4"), XML, "UTF-8").extractValue(request));
     }
 }

@@ -29,4 +29,12 @@ public final class RequestCookieExtractor implements RequestValueExtractor {
                 .collect(HashMap::new, (m, c) ->
                         m.put(c.getName(), c.getValue()), HashMap::putAll);
     }
+
+    @Override
+    public Object extractValue(HttpServletRequest request) {
+        if (1 == keyNames.size()) {
+            return extract(request).get(keyNames.get(0));
+        }
+        return null;
+    }
 }

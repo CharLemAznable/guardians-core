@@ -20,4 +20,9 @@ public final class RequestBodyRawExtractor implements RequestValueExtractor {
     public Map<String, Object> extract(HttpServletRequest request) {
         return of(RAW, dealRequestBodyStream(request, charsetName));
     }
+
+    @Override
+    public Object extractValue(HttpServletRequest request) {
+        return extract(request).get(RAW);
+    }
 }

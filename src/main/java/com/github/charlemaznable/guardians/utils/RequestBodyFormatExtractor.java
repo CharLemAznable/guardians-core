@@ -41,4 +41,12 @@ public final class RequestBodyFormatExtractor implements RequestValueExtractor {
                 .collect(HashMap::new, (m, e) ->
                         m.put(e.getKey(), e.getValue()), HashMap::putAll);
     }
+
+    @Override
+    public Object extractValue(HttpServletRequest request) {
+        if (1 == keyNames.size()) {
+            return extract(request).get(keyNames.get(0));
+        }
+        return null;
+    }
 }

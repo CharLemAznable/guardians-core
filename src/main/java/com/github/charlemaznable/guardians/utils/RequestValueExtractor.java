@@ -6,4 +6,6 @@ import java.util.Map;
 public interface RequestValueExtractor {
 
     Map<String, Object> extract(HttpServletRequest request);
+
+    Object extractValue(HttpServletRequest request);
 }

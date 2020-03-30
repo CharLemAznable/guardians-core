@@ -26,4 +26,12 @@ public final class RequestHeaderExtractor implements RequestValueExtractor {
         }
         return result;
     }
+
+    @Override
+    public Object extractValue(HttpServletRequest request) {
+        if (1 == keyNames.size()) {
+            return extract(request).get(keyNames.get(0));
+        }
+        return null;
+    }
 }
