@@ -1,6 +1,7 @@
 package com.github.charlemaznable.guardians.utils;
 
 import static com.github.charlemaznable.core.lang.Condition.nullThen;
+import static com.github.charlemaznable.core.lang.Listt.newArrayList;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 public enum RequestValueExtractorType {
@@ -48,8 +49,17 @@ public enum RequestValueExtractorType {
         }
     };
 
+    public final RequestValueExtractor extractor(String keyName) {
+        return extractor(newArrayList(keyName));
+    }
+
     public final RequestValueExtractor extractor(Iterable<String> keyNames) {
         return extractor(keyNames, null, null);
+    }
+
+    public RequestValueExtractor extractor(
+            String keyName, RequestBodyFormat parser, String charsetName) {
+        return extractor(newArrayList(keyName), parser, charsetName);
     }
 
     public abstract RequestValueExtractor extractor(
