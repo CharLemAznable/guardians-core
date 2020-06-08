@@ -24,4 +24,12 @@
         <url>https://github.com/CharLemAznable/guardians-core</url>
     </scm>
 
+    <dependencies>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
 </project>
