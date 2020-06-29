@@ -26,8 +26,8 @@
 
     <dependencies>
         <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
+            <groupId>com.github.charlemaznable</groupId>
+            <artifactId>complex-logger</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>
