@@ -27,7 +27,7 @@
     <dependencies>
         <dependency>
             <groupId>com.github.charlemaznable</groupId>
-            <artifactId>complex-logger</artifactId>
+            <artifactId>logback-miner</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>
