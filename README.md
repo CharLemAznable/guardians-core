@@ -30,7 +30,7 @@ Guardians核心.
 <dependency>
   <groupId>com.github.charlemaznable</groupId>
   <artifactId>guardians-core</artifactId>
-  <version>0.6.0</version>
+  <version>0.6.1</version>
 </dependency>
 ```
 
@@ -40,6 +40,6 @@ Guardians核心.
 <dependency>
   <groupId>com.github.charlemaznable</groupId>
   <artifactId>guardians-core</artifactId>
-  <version>0.6.1-SNAPSHOT</version>
+  <version>0.6.2-SNAPSHOT</version>
 </dependency>
 ```
