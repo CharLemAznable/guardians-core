@@ -6,5 +6,8 @@ addons:
     organization: "charlemaznable"
 script:
   - mvn clean verify sonar:sonar -Dsonar.projectKey=CharLemAznable_guardians-core
+cache:
+  directories:
+    - '$HOME/.sonar/cache'
 after_success:
   - bash <(curl -s https://codecov.io/bash)
