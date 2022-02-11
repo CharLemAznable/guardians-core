@@ -8,7 +8,7 @@ import lombok.val;
 import static com.github.charlemaznable.core.codec.Json.json;
 import static com.github.charlemaznable.core.codec.Json.unJson;
 import static com.github.charlemaznable.core.lang.Mapp.newHashMap;
-import static com.github.charlemaznable.core.spring.MutableHttpServletUtils.mutateResponse;
+import static com.github.charlemaznable.core.spring.MutableHttpServletElf.mutateResponse;
 
 public class ErrorGuardian {
 
