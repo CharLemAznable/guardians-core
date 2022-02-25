@@ -1,5 +1,6 @@
 package com.github.charlemaznable.guardians.spring;
 
+import lombok.NoArgsConstructor;
 import lombok.val;
 import org.springframework.web.method.HandlerMethod;
 
@@ -14,17 +15,17 @@ import static com.github.charlemaznable.core.lang.Condition.notNullThen;
 import static com.github.charlemaznable.core.lang.Listt.newArrayList;
 import static com.github.charlemaznable.core.lang.Mapp.newHashMap;
 import static com.github.charlemaznable.core.spring.AnnotationElf.resolveContainerAnnotationType;
+import static lombok.AccessLevel.PRIVATE;
 import static org.springframework.core.annotation.AnnotatedElementUtils.findMergedAnnotation;
 import static org.springframework.core.annotation.AnnotationUtils.getValue;
 
+@NoArgsConstructor(access = PRIVATE)
 public final class GuardianContext {
 
     private static ThreadLocal<HttpServletRequest> requestContext = new InheritableThreadLocal<>();
     private static ThreadLocal<HttpServletResponse> responseContext = new InheritableThreadLocal<>();
     private static ThreadLocal<Object> handlerContext = new InheritableThreadLocal<>();
     private static ThreadLocal<Map<String, Object>> customContext = new InheritableThreadLocal<>();
-
-    private GuardianContext() {}
 
     public static void setup(HttpServletRequest request, HttpServletResponse response, Object handler) {
         requestContext.set(request);
