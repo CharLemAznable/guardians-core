@@ -16,7 +16,7 @@ import static com.github.charlemaznable.core.lang.Listt.newArrayList;
 import static com.github.charlemaznable.core.lang.Mapp.newHashMap;
 import static com.github.charlemaznable.core.spring.AnnotationElf.resolveContainerAnnotationType;
 import static lombok.AccessLevel.PRIVATE;
-import static org.springframework.core.annotation.AnnotatedElementUtils.findMergedAnnotation;
+import static org.springframework.core.annotation.AnnotatedElementUtils.getMergedAnnotation;
 import static org.springframework.core.annotation.AnnotationUtils.getValue;
 
 @NoArgsConstructor(access = PRIVATE)
@@ -81,21 +81,21 @@ public final class GuardianContext {
 
         val containerType = resolveContainerAnnotationType(annotationType);
         if (null == containerType) {
-            val annotation = findMergedAnnotation(
+            val annotation = getMergedAnnotation(
                     handlerMethod, annotationType);
             if (null != annotation) return newArrayList(annotation);
-            return newArrayList(findMergedAnnotation(
+            return newArrayList(getMergedAnnotation(
                     handlerDeclaringClass, annotationType));
 
         } else {
-            val methodContainer = findMergedAnnotation(handlerMethod, containerType);
+            val methodContainer = getMergedAnnotation(handlerMethod, containerType);
             if (null != methodContainer) return newArrayList((A[]) getValue(methodContainer));
-            val methodAnnotation = findMergedAnnotation(handlerMethod, annotationType);
+            val methodAnnotation = getMergedAnnotation(handlerMethod, annotationType);
             if (null != methodAnnotation) return newArrayList(methodAnnotation);
 
-            val classContainer = findMergedAnnotation(handlerDeclaringClass, containerType);
+            val classContainer = getMergedAnnotation(handlerDeclaringClass, containerType);
             if (null != classContainer) return newArrayList((A[]) getValue(classContainer));
-            val classAnnotation = findMergedAnnotation(handlerDeclaringClass, annotationType);
+            val classAnnotation = getMergedAnnotation(handlerDeclaringClass, annotationType);
             if (null != classAnnotation) return newArrayList(classAnnotation);
 
             return newArrayList();

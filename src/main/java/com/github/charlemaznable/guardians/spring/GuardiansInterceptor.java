@@ -30,6 +30,7 @@ import static com.github.charlemaznable.core.lang.Clz.isAssignable;
 import static com.github.charlemaznable.core.lang.Condition.checkNull;
 import static com.github.charlemaznable.core.lang.Listt.isNotEmpty;
 import static com.github.charlemaznable.core.lang.Listt.newArrayList;
+import static com.github.charlemaznable.core.spring.AnnotationElf.findAnnotation;
 import static com.github.charlemaznable.core.spring.MutableHttpServletElf.mutableRequest;
 import static com.github.charlemaznable.core.spring.MutableHttpServletElf.mutableResponse;
 import static com.github.charlemaznable.core.spring.SpringContext.getBean;
@@ -40,8 +41,8 @@ import static com.github.charlemaznable.guardians.spring.GuardianContext.respons
 import static com.github.charlemaznable.guardians.spring.GuardianContext.setup;
 import static com.github.charlemaznable.guardians.spring.GuardianContext.teardown;
 import static org.apache.commons.lang3.reflect.MethodUtils.getMethodsListWithAnnotation;
-import static org.springframework.core.annotation.AnnotatedElementUtils.findMergedAnnotation;
-import static org.springframework.core.annotation.AnnotatedElementUtils.findMergedRepeatableAnnotations;
+import static org.springframework.core.annotation.AnnotatedElementUtils.getMergedAnnotation;
+import static org.springframework.core.annotation.AnnotatedElementUtils.getMergedRepeatableAnnotations;
 
 @Slf4j
 @Component
@@ -168,10 +169,10 @@ public final class GuardiansInterceptor implements HandlerInterceptor {
     }
 
     private Optional<NoneGuardian> findNoneGuardian(HandlerGuardiansCacheKey cacheKey) {
-        val methodNoneGuardian = findMergedAnnotation(cacheKey.getMethod(), NoneGuardian.class);
+        val methodNoneGuardian = findAnnotation(cacheKey.getMethod(), NoneGuardian.class);
         if (null != methodNoneGuardian) return Optional.of(methodNoneGuardian);
 
-        val classNoneGuardian = findMergedAnnotation(cacheKey.getDeclaringClass(), NoneGuardian.class);
+        val classNoneGuardian = findAnnotation(cacheKey.getDeclaringClass(), NoneGuardian.class);
         if (null != classNoneGuardian) return Optional.of(classNoneGuardian);
 
         return Optional.empty();
@@ -179,10 +180,10 @@ public final class GuardiansInterceptor implements HandlerInterceptor {
 
     @SuppressWarnings("unchecked")
     private <G extends Annotation> List<G> findGuardians(HandlerGuardiansCacheKey cacheKey, Class<G> guardianType) {
-        val methodGuardians = findMergedRepeatableAnnotations(cacheKey.getMethod(), guardianType);
+        val methodGuardians = getMergedRepeatableAnnotations(cacheKey.getMethod(), guardianType);
         if (isNotEmpty(methodGuardians)) return newArrayList(methodGuardians);
 
-        val classGuardians = findMergedRepeatableAnnotations(cacheKey.getDeclaringClass(), guardianType);
+        val classGuardians = getMergedRepeatableAnnotations(cacheKey.getDeclaringClass(), guardianType);
         if (isNotEmpty(classGuardians)) return newArrayList(classGuardians);
 
         return newArrayList();
@@ -193,7 +194,7 @@ public final class GuardiansInterceptor implements HandlerInterceptor {
         val allMethods = getMethodsListWithAnnotation(guardianType, Guard.class);
         for (val annotatedMethod : allMethods) {
             if (guardianType == annotatedMethod.getDeclaringClass() ||
-                    checkNull(findMergedAnnotation(annotatedMethod,
+                    checkNull(getMergedAnnotation(annotatedMethod,
                             Guard.class), () -> false, Guard::inherited)) {
                 guardMethodList.add(annotatedMethod);
             }
