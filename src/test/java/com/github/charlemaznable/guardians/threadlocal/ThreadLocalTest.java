@@ -45,7 +45,7 @@ public class ThreadLocalTest {
     @SneakyThrows
     @Test
     public void testAlpha() {
-        val response = mockMvc.perform(get("/threadlocal/alpha"))
+        val response = mockMvc.perform(get("/threadlocal/alpha").content(""))
                 .andExpect(status().isOk())
                 .andReturn().getResponse();
         val responseContent = response.getContentAsString();
@@ -59,7 +59,7 @@ public class ThreadLocalTest {
     @SneakyThrows
     @Test
     public void testBeta() {
-        val response = mockMvc.perform(get("/threadlocal/beta"))
+        val response = mockMvc.perform(get("/threadlocal/beta").content(""))
                 .andExpect(status().isOk())
                 .andReturn().getResponse();
         val responseContent = response.getContentAsString();

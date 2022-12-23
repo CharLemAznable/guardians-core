@@ -23,7 +23,7 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 
 @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = ContextConfiguration.class)
+@ContextConfiguration(classes = com.github.charlemaznable.guardians.context.ContextConfiguration.class)
 @WebAppConfiguration
 @TestInstance(Lifecycle.PER_CLASS)
 public class ContextTest {
@@ -44,7 +44,7 @@ public class ContextTest {
     @SneakyThrows
     @Test
     public void testAlpha() {
-        val response = mockMvc.perform(get("/context/alpha"))
+        val response = mockMvc.perform(get("/context/alpha").content(""))
                 .andExpect(status().isOk())
                 .andReturn().getResponse();
         val responseContent = response.getContentAsString();
@@ -56,7 +56,7 @@ public class ContextTest {
     @SneakyThrows
     @Test
     public void testBeta() {
-        val response = mockMvc.perform(get("/context/beta"))
+        val response = mockMvc.perform(get("/context/beta").content(""))
                 .andExpect(status().isOk())
                 .andReturn().getResponse();
         val responseContent = response.getContentAsString();
@@ -68,7 +68,7 @@ public class ContextTest {
     @SneakyThrows
     @Test
     public void testError() {
-        val response = mockMvc.perform(get("/context/error"))
+        val response = mockMvc.perform(get("/context/error").content(""))
                 .andExpect(status().isOk())
                 .andReturn().getResponse();
         val responseContent = response.getContentAsString();

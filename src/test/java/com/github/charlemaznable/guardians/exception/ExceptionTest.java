@@ -43,7 +43,7 @@ public class ExceptionTest {
     @SneakyThrows
     @Test
     public void testTrue() {
-        val response = mockMvc.perform(get("/exception/true"))
+        val response = mockMvc.perform(get("/exception/true").content(""))
                 .andExpect(status().isOk())
                 .andReturn().getResponse();
         val responseContent = response.getContentAsString();
@@ -53,7 +53,7 @@ public class ExceptionTest {
     @SneakyThrows
     @Test
     public void testFalse() {
-        val response = mockMvc.perform(get("/exception/false"))
+        val response = mockMvc.perform(get("/exception/false").content(""))
                 .andExpect(status().isOk())
                 .andReturn().getResponse();
         val responseContent = response.getContentAsString();
@@ -63,7 +63,7 @@ public class ExceptionTest {
     @SneakyThrows
     @Test
     public void testException() {
-        val response = mockMvc.perform(get("/exception/exception"))
+        val response = mockMvc.perform(get("/exception/exception").content(""))
                 .andExpect(status().isOk())
                 .andReturn().getResponse();
         val responseContent = response.getContentAsString();
@@ -73,7 +73,7 @@ public class ExceptionTest {
     @SneakyThrows
     @Test
     public void testExceptionUnhandled() {
-        val response = mockMvc.perform(get("/exception/exceptionUnhandled"))
+        val response = mockMvc.perform(get("/exception/exceptionUnhandled").content(""))
                 .andExpect(status().isOk())
                 .andReturn().getResponse();
         val responseContent = response.getContentAsString();
@@ -83,7 +83,7 @@ public class ExceptionTest {
     @SneakyThrows
     @Test
     public void testRuntime() {
-        val response = mockMvc.perform(get("/exception/runtime"))
+        val response = mockMvc.perform(get("/exception/runtime").content(""))
                 .andExpect(status().isOk())
                 .andReturn().getResponse();
         val responseContent = response.getContentAsString();
@@ -93,7 +93,7 @@ public class ExceptionTest {
     @SneakyThrows
     @Test
     public void testRuntimeBiz() {
-        val response = mockMvc.perform(get("/exception/runtimeBiz"))
+        val response = mockMvc.perform(get("/exception/runtimeBiz").content(""))
                 .andExpect(status().isOk())
                 .andReturn().getResponse();
         val responseContent = response.getContentAsString();

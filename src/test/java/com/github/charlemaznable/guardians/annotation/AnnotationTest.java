@@ -44,7 +44,7 @@ public class AnnotationTest {
     @SneakyThrows
     @Test
     public void testDefault() {
-        val response = mockMvc.perform(get("/annotation/default"))
+        val response = mockMvc.perform(get("/annotation/default").content(""))
                 .andExpect(status().isOk())
                 .andReturn().getResponse();
         val responseContent = response.getContentAsString();
@@ -58,7 +58,7 @@ public class AnnotationTest {
     @SneakyThrows
     @Test
     public void testAlpha() {
-        val response = mockMvc.perform(get("/annotation/alpha"))
+        val response = mockMvc.perform(get("/annotation/alpha").content(""))
                 .andExpect(status().isOk())
                 .andReturn().getResponse();
         val responseContent = response.getContentAsString();
@@ -72,7 +72,7 @@ public class AnnotationTest {
     @SneakyThrows
     @Test
     public void testBeta() {
-        val response = mockMvc.perform(get("/annotation/beta"))
+        val response = mockMvc.perform(get("/annotation/beta").content(""))
                 .andExpect(status().isOk())
                 .andReturn().getResponse();
         val responseContent = response.getContentAsString();
@@ -86,7 +86,7 @@ public class AnnotationTest {
     @SneakyThrows
     @Test
     public void testGamma() {
-        val response = mockMvc.perform(get("/annotation/gamma"))
+        val response = mockMvc.perform(get("/annotation/gamma").content(""))
                 .andExpect(status().isOk())
                 .andReturn().getResponse();
         val responseContent = response.getContentAsString();
@@ -100,7 +100,7 @@ public class AnnotationTest {
     @SneakyThrows
     @Test
     public void testDelta() {
-        val response = mockMvc.perform(get("/annotation/delta"))
+        val response = mockMvc.perform(get("/annotation/delta").content(""))
                 .andExpect(status().isOk())
                 .andReturn().getResponse();
         val responseContent = response.getContentAsString();
@@ -114,7 +114,7 @@ public class AnnotationTest {
     @SneakyThrows
     @Test
     public void testError() {
-        val response = mockMvc.perform(get("/annotation/error"))
+        val response = mockMvc.perform(get("/annotation/error").content(""))
                 .andExpect(status().isOk())
                 .andReturn().getResponse();
         val responseContent = response.getContentAsString();

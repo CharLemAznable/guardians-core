@@ -45,7 +45,7 @@ public class InheritedTest {
     @SneakyThrows
     @Test
     public void testInherited() {
-        val response = mockMvc.perform(get("/inherited/index"))
+        val response = mockMvc.perform(get("/inherited/index").content(""))
                 .andExpect(status().isOk())
                 .andReturn().getResponse();
         val responseContent = response.getContentAsString();

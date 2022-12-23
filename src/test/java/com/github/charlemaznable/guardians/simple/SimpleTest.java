@@ -45,14 +45,14 @@ public class SimpleTest {
     @SneakyThrows
     @Test
     public void testSimple() {
-        val response = mockMvc.perform(get("/simple/simple"))
+        val response = mockMvc.perform(get("/simple/simple").content(""))
                 .andExpect(status().isOk())
                 .andReturn().getResponse();
         val responseContent = response.getContentAsString();
         val responseMap = unJson(responseContent);
         assertTrue(responseMap.isEmpty());
 
-        val response2 = mockMvc.perform(get("/simple/simple"))
+        val response2 = mockMvc.perform(get("/simple/simple").content(""))
                 .andExpect(status().isOk())
                 .andReturn().getResponse();
         val responseContent2 = response2.getContentAsString();
@@ -63,7 +63,7 @@ public class SimpleTest {
     @SneakyThrows
     @Test
     public void testEmpty() {
-        val response = mockMvc.perform(get("/simple/empty"))
+        val response = mockMvc.perform(get("/simple/empty").content(""))
                 .andExpect(status().isOk())
                 .andReturn().getResponse();
         val responseContent = response.getContentAsString();
@@ -74,7 +74,7 @@ public class SimpleTest {
     @SneakyThrows
     @Test
     public void testGuarding() {
-        val response = mockMvc.perform(get("/simple/guarding"))
+        val response = mockMvc.perform(get("/simple/guarding").content(""))
                 .andExpect(status().isOk())
                 .andReturn().getResponse();
         val responseContent = response.getContentAsString();
@@ -86,7 +86,7 @@ public class SimpleTest {
     @SneakyThrows
     @Test
     public void testGuardingError() {
-        val response = mockMvc.perform(get("/simple/guardingError"))
+        val response = mockMvc.perform(get("/simple/guardingError").content(""))
                 .andExpect(status().isOk())
                 .andReturn().getResponse();
         val responseContent = response.getContentAsString();
@@ -97,7 +97,7 @@ public class SimpleTest {
     @SneakyThrows
     @Test
     public void testGuardingFalse() {
-        val response = mockMvc.perform(get("/simple/guardingFalse"))
+        val response = mockMvc.perform(get("/simple/guardingFalse").content(""))
                 .andExpect(status().isOk())
                 .andReturn().getResponse();
         val responseContent = response.getContentAsString();

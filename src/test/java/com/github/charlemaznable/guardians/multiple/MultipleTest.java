@@ -45,7 +45,7 @@ public class MultipleTest {
     @SneakyThrows
     @Test
     public void testDefault() {
-        val response = mockMvc.perform(get("/multiple/default"))
+        val response = mockMvc.perform(get("/multiple/default").content(""))
                 .andExpect(status().isOk())
                 .andReturn().getResponse();
         val responseContent = response.getContentAsString();
@@ -57,7 +57,7 @@ public class MultipleTest {
     @SneakyThrows
     @Test
     public void testCompose() {
-        val response = mockMvc.perform(get("/multiple/compose"))
+        val response = mockMvc.perform(get("/multiple/compose").content(""))
                 .andExpect(status().isOk())
                 .andReturn().getResponse();
         val responseContent = response.getContentAsString();
@@ -69,7 +69,7 @@ public class MultipleTest {
     @SneakyThrows
     @Test
     public void testPlain() {
-        val response = mockMvc.perform(get("/multiple/plain"))
+        val response = mockMvc.perform(get("/multiple/plain").content(""))
                 .andExpect(status().isOk())
                 .andReturn().getResponse();
         val responseContent = response.getContentAsString();
@@ -81,14 +81,14 @@ public class MultipleTest {
     @SneakyThrows
     @Test
     public void testNone() {
-        val response = mockMvc.perform(get("/multiple/none"))
+        val response = mockMvc.perform(get("/multiple/none").content(""))
                 .andExpect(status().isOk())
                 .andReturn().getResponse();
         val responseContent = response.getContentAsString();
         val responseMap = unJson(responseContent);
         assertTrue(responseMap.isEmpty());
 
-        val response2 = mockMvc.perform(get("/none/none"))
+        val response2 = mockMvc.perform(get("/none/none").content(""))
                 .andExpect(status().isOk())
                 .andReturn().getResponse();
         val responseContent2 = response2.getContentAsString();
