@@ -2,12 +2,11 @@ package com.github.charlemaznable.guardians.exception;
 
 import com.github.charlemaznable.guardians.PostGuardian;
 import com.github.charlemaznable.guardians.PreGuardian;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import static com.github.charlemaznable.core.net.Http.responseText;
 

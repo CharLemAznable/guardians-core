@@ -1,11 +1,11 @@
 package com.github.charlemaznable.guardians.spring;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.NoArgsConstructor;
 import lombok.val;
 import org.springframework.web.method.HandlerMethod;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.List;
@@ -22,10 +22,10 @@ import static org.springframework.core.annotation.AnnotationUtils.getValue;
 @NoArgsConstructor(access = PRIVATE)
 public final class GuardianContext {
 
-    private static ThreadLocal<HttpServletRequest> requestContext = new InheritableThreadLocal<>();
-    private static ThreadLocal<HttpServletResponse> responseContext = new InheritableThreadLocal<>();
-    private static ThreadLocal<Object> handlerContext = new InheritableThreadLocal<>();
-    private static ThreadLocal<Map<String, Object>> customContext = new InheritableThreadLocal<>();
+    private static final ThreadLocal<HttpServletRequest> requestContext = new InheritableThreadLocal<>();
+    private static final ThreadLocal<HttpServletResponse> responseContext = new InheritableThreadLocal<>();
+    private static final ThreadLocal<Object> handlerContext = new InheritableThreadLocal<>();
+    private static final ThreadLocal<Map<String, Object>> customContext = new InheritableThreadLocal<>();
 
     public static void setup(HttpServletRequest request, HttpServletResponse response, Object handler) {
         requestContext.set(request);
@@ -74,8 +74,7 @@ public final class GuardianContext {
     @SuppressWarnings("unchecked")
     public static <A extends Annotation> List<A> handlerAnnotations(Class<A> annotationType) {
         val handler = handler();
-        if (!(handler instanceof HandlerMethod)) return newArrayList();
-        HandlerMethod methodHandler = (HandlerMethod) handler;
+        if (!(handler instanceof HandlerMethod methodHandler)) return newArrayList();
         val handlerMethod = methodHandler.getMethod();
         val handlerDeclaringClass = handlerMethod.getDeclaringClass();
 

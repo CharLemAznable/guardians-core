@@ -1,9 +1,10 @@
 package com.github.charlemaznable.guardians.exception;
 
 import com.github.charlemaznable.guardians.Guard;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Component;
 
-import javax.servlet.http.HttpServletResponse;
+import java.io.Serial;
 
 import static com.github.charlemaznable.core.lang.Condition.checkNull;
 import static com.github.charlemaznable.core.net.Http.responseText;
@@ -19,6 +20,7 @@ public class ExceptionPostUnhandledGuardian {
 
     public static class GuardianTestException extends GuardianException {
 
+        @Serial
         private static final long serialVersionUID = 7078357737545760722L;
     }
 }
