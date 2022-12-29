@@ -48,13 +48,13 @@ import static org.springframework.core.annotation.AnnotatedElementUtils.getMerge
 @Component
 public final class GuardiansInterceptor implements HandlerInterceptor {
 
-    private Cache<HandlerGuardiansCacheKey, Optional<NoneGuardian>>
+    private final Cache<HandlerGuardiansCacheKey, Optional<NoneGuardian>>
             noneGuardianAnnotationCache = CacheBuilder.newBuilder().build();
-    private Cache<HandlerGuardiansCacheKey, List<PreGuardian>>
+    private final Cache<HandlerGuardiansCacheKey, List<PreGuardian>>
             preGuardiansAnnotationCache = CacheBuilder.newBuilder().build();
-    private Cache<HandlerGuardiansCacheKey, List<PostGuardian>>
+    private final Cache<HandlerGuardiansCacheKey, List<PostGuardian>>
             postGuardiansAnnotationCache = CacheBuilder.newBuilder().build();
-    private Cache<Class<?>, List<Method>>
+    private final Cache<Class<?>, List<Method>>
             guardianMethodListCache = CacheBuilder.newBuilder().build();
 
     @Override
@@ -93,6 +93,7 @@ public final class GuardiansInterceptor implements HandlerInterceptor {
         }
     }
 
+    @SuppressWarnings("DuplicatedCode")
     @SneakyThrows
     public void preHandleInternal(HttpServletRequest request,
                                   HttpServletResponse response,
@@ -132,6 +133,7 @@ public final class GuardiansInterceptor implements HandlerInterceptor {
         }
     }
 
+    @SuppressWarnings("DuplicatedCode")
     @SneakyThrows
     public void afterCompletionInternal(HttpServletRequest request,
                                         HttpServletResponse response,
@@ -178,7 +180,6 @@ public final class GuardiansInterceptor implements HandlerInterceptor {
         return Optional.empty();
     }
 
-    @SuppressWarnings("unchecked")
     private <G extends Annotation> List<G> findGuardians(HandlerGuardiansCacheKey cacheKey, Class<G> guardianType) {
         val methodGuardians = getMergedRepeatableAnnotations(cacheKey.getMethod(), guardianType);
         if (isNotEmpty(methodGuardians)) return newArrayList(methodGuardians);
@@ -219,7 +220,7 @@ public final class GuardiansInterceptor implements HandlerInterceptor {
                 parameters[i] = handlerAnnotation((Class<Annotation>) parameterType);
             } else if (isAssignable(parameterType, List.class)) {
                 val genericType = guardMethod.getGenericParameterTypes()[i];
-                val componentType = (Class) ((ParameterizedType) genericType).getActualTypeArguments()[0];
+                val componentType = (Class<?>) ((ParameterizedType) genericType).getActualTypeArguments()[0];
                 if (isAssignable(componentType, Annotation.class)) {
                     parameters[i] = handlerAnnotations((Class<Annotation>) componentType);
                 }
@@ -254,8 +255,8 @@ public final class GuardiansInterceptor implements HandlerInterceptor {
     @EqualsAndHashCode
     static class HandlerGuardiansCacheKey {
 
-        private Method method;
-        private Class<?> declaringClass;
+        private final Method method;
+        private final Class<?> declaringClass;
 
         HandlerGuardiansCacheKey(HandlerMethod handlerMethod) {
             this.method = handlerMethod.getMethod();

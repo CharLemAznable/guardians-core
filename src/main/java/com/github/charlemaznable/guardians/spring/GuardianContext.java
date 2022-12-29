@@ -22,10 +22,10 @@ import static org.springframework.core.annotation.AnnotationUtils.getValue;
 @NoArgsConstructor(access = PRIVATE)
 public final class GuardianContext {
 
-    private static ThreadLocal<HttpServletRequest> requestContext = new InheritableThreadLocal<>();
-    private static ThreadLocal<HttpServletResponse> responseContext = new InheritableThreadLocal<>();
-    private static ThreadLocal<Object> handlerContext = new InheritableThreadLocal<>();
-    private static ThreadLocal<Map<String, Object>> customContext = new InheritableThreadLocal<>();
+    private static final ThreadLocal<HttpServletRequest> requestContext = new InheritableThreadLocal<>();
+    private static final ThreadLocal<HttpServletResponse> responseContext = new InheritableThreadLocal<>();
+    private static final ThreadLocal<Object> handlerContext = new InheritableThreadLocal<>();
+    private static final ThreadLocal<Map<String, Object>> customContext = new InheritableThreadLocal<>();
 
     public static void setup(HttpServletRequest request, HttpServletResponse response, Object handler) {
         requestContext.set(request);
