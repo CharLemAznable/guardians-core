@@ -30,7 +30,6 @@ import static com.github.charlemaznable.core.lang.Clz.isAssignable;
 import static com.github.charlemaznable.core.lang.Condition.checkNull;
 import static com.github.charlemaznable.core.lang.Listt.isNotEmpty;
 import static com.github.charlemaznable.core.lang.Listt.newArrayList;
-import static com.github.charlemaznable.core.spring.AnnotationElf.findAnnotation;
 import static com.github.charlemaznable.core.spring.MutableHttpServletElf.mutableRequest;
 import static com.github.charlemaznable.core.spring.MutableHttpServletElf.mutableResponse;
 import static com.github.charlemaznable.core.spring.SpringContext.getBean;
@@ -171,10 +170,10 @@ public final class GuardiansInterceptor implements HandlerInterceptor {
     }
 
     private Optional<NoneGuardian> findNoneGuardian(HandlerGuardiansCacheKey cacheKey) {
-        val methodNoneGuardian = findAnnotation(cacheKey.getMethod(), NoneGuardian.class);
+        val methodNoneGuardian = getMergedAnnotation(cacheKey.getMethod(), NoneGuardian.class);
         if (null != methodNoneGuardian) return Optional.of(methodNoneGuardian);
 
-        val classNoneGuardian = findAnnotation(cacheKey.getDeclaringClass(), NoneGuardian.class);
+        val classNoneGuardian = getMergedAnnotation(cacheKey.getDeclaringClass(), NoneGuardian.class);
         if (null != classNoneGuardian) return Optional.of(classNoneGuardian);
 
         return Optional.empty();
