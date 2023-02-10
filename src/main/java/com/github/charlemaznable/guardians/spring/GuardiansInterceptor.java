@@ -12,7 +12,6 @@ import lombok.Getter;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
-import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -44,7 +43,6 @@ import static org.springframework.core.annotation.AnnotatedElementUtils.getMerge
 import static org.springframework.core.annotation.AnnotatedElementUtils.getMergedRepeatableAnnotations;
 
 @Slf4j
-@Component
 public final class GuardiansInterceptor implements HandlerInterceptor {
 
     private final Cache<HandlerGuardiansCacheKey, Optional<NoneGuardian>>
