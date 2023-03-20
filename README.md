@@ -29,7 +29,7 @@ Guardians核心.
 <dependency>
   <groupId>com.github.charlemaznable</groupId>
   <artifactId>guardians-core</artifactId>
-  <version>2022.0.5</version>
+  <version>2022.0.6</version>
 </dependency>
 ```
 
@@ -39,6 +39,6 @@ Guardians核心.
 <dependency>
   <groupId>com.github.charlemaznable</groupId>
   <artifactId>guardians-core</artifactId>
-  <version>2022.0.6-SNAPSHOT</version>
+  <version>2022.0.7-SNAPSHOT</version>
 </dependency>
 ```
