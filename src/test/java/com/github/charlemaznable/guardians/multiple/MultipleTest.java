@@ -87,6 +87,6 @@ public class MultipleTest {
                 .andReturn().getResponse();
         val responseContent2 = response2.getContentAsString();
         val responseMap2 = unJson(responseContent2);
-        assertTrue(responseMap.isEmpty());
+        assertTrue(responseMap2.isEmpty());
     }
 }
